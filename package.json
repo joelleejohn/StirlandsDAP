@@ -1,0 +1,19 @@
+{
+  "name": "stirlands",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joelleejohn/StirlandsDAP.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joelleejohn/StirlandsDAP/issues"
+  },
+  "homepage": "https://github.com/joelleejohn/StirlandsDAP#readme"
+}
