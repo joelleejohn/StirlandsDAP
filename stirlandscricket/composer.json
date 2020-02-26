@@ -1,0 +1,11 @@
+{
+    "name": "dopef/stirlandscricket",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Joel-Lee John",
+            "email": "chezzyt13@gmail.com"
+        }
+    ],
+    "require": {}
+}
