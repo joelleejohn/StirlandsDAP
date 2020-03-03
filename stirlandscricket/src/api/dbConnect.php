@@ -22,7 +22,7 @@ class DbConnect
 
     private function getDatabase() : \PDO
     {
-        if (isset($database))
+        if (isset($this->database))
         {
             return $this->database;
         }
@@ -38,7 +38,7 @@ class DbConnect
     {
         try
         {
-            $this->database = new \PDO($this->connectionString);
+            $this->database = new \PDO($this->connectionString, 'root');
         }
         catch (\PDOException $ex)
         {
