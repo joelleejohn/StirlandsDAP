@@ -5,7 +5,7 @@ header("Access-Control-Allow-Origin: *");
 require '../../vendor/autoload.php';
 
 $response = array();
-try 
+try
 {
     if ($_POST['queryMethod'])
     {
@@ -22,7 +22,7 @@ try
                 break;
         }
     }
-    else 
+    else
     {
         throw new Exception('No POST data detected.');
     }
@@ -31,7 +31,7 @@ catch (Exception $ex)
 {
     $response['error'] = $ex->getMessage();
 }
-finally 
+finally
 {
 
     echo json_encode($response);
@@ -39,7 +39,7 @@ finally
 
 function getAllPlayers(stirlands\DbConnect $db) : array
 {
-    return $db->query('SELECT playerid, firstname FROM player');
+    return $db->query('SELECT rfuserroleid, rfuserrole FROM rfuserrole');
 }
 
 
