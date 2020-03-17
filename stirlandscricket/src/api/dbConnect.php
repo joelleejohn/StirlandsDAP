@@ -38,7 +38,7 @@ class DbConnect
     {
         try
         {
-            $this->database = new \PDO($this->connectionString, 'root');
+            $this->database = new \PDO($this->connectionString, 'root', null);
         }
         catch (\PDOException $ex)
         {

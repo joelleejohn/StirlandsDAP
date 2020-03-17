@@ -191,8 +191,8 @@ CREATE TABLE user (
     rfuserroleid int NOT NULL,
     username varchar(50) NOT NULL,
     password varchar(20) NOT NULL,
-    primaryemail int NOT NULL,
-    secondaryemail int NULL,
+    primaryemail varchar(255) NOT NULL,
+    secondaryemail varchar(255) NULL,
     UNIQUE INDEX DF_user_username (username),
     CONSTRAINT PK_user PRIMARY KEY (userid)
 );
