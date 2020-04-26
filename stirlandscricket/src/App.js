@@ -1,43 +1,28 @@
 import React, { Component } from 'react';
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+	Link
+  } from "react-router-dom";
 import logo from './logo.svg';
 import Menu from './components/Menu';
+import Home from './pages/Home';
 import './App.css';
 
-class App extends Component {
-  constructor(){
-    super();
-    this.state = { userroles: undefined };
-  }
+export default class App extends Component {
+	
+	constructor(){
+		super();
+		this.state = { userroles: undefined };
+	}
 
-  async loadPlayers(){
-    let formData = new FormData();
-    formData.append('queryMethod', 'getAllPlayers');
-    await fetch('http://localhost:8012/StirlandsDAP/stirlandscricket/src/api/dbInferface.php', {  method: 'POST', body: formData})
-                  .then(async (response) => {this.setState({userroles: (await response.json()).data})});
-  }
+	async componentDidMount(){
+	}
 
-  async componentDidMount(){
-    console.log(this.state.userroles);
-    (await this.loadPlayers());
-    console.log('After await:');
-    console.log(this.state.userroles);
-  }
-
-  render() {
-    let items = [];
-    console.log('in render:');
-    console.log(this.state.userroles);
-    if (this.state.userroles)
-      this.state.userroles.forEach(item => items.push(<p>{item.rfuserrole}</p>));
-    return (
-      <div className="App">
-        <Menu />
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          {items}
-        </header>
-      </div>
-    );
+	render() {
+		return (
+			<Menu />
+		);
   }
 }
-export default App;
