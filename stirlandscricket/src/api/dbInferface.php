@@ -1,48 +1,48 @@
 <?php
+session_id('user');
+session_start();
+ob_start();
+require '../../vendor/autoload.php';
 
 use stirlands\DbConnect;
 
-session_start();
 $_SESSION['IsDevelopment'] = (bool)getenv('IsDevelopment');
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json");
-
-require '../../vendor/autoload.php';
 $response = array();
-if(isset($_SESSION['user']) || $_SESSION['IsDevelopment'])
-{
-	try
-	{
-		if (isset($_POST['queryMethod']))
-		{
-			$db = new stirlands\DbConnect('mysql:host=localhost;dbname=test', 'root');
-			$dbResponse = array();
-			$method = $_POST['queryMethod'];
-			$response = call_user_func($method, $db);
-		}
-		else
-		{
-			throw new Exception('No POST data detected.');
-		}
-	}
-	catch (Exception $ex)
-	{
-		$response = [ 'hasErrored' => true, 'error' => $ex->getMessage() ] ;
-	}
-	finally
-	{
 
-		echo json_encode($response);
+try
+{
+	if (isset($_POST['queryMethod']))
+	{
+		$db = new stirlands\DbConnect('mysql:host=localhost;dbname=test', 'root');
+		$dbResponse = array();
+		$method = $_POST['queryMethod'];
+		$response = call_user_func($method, $db);
+	}
+	else
+	{
+		throw new Exception('No POST data detected.');
 	}
 }
-else 
+catch (Exception $ex)
 {
-	echo json_encode($response = [ 'authFail' => true ]);
+	$response = [ 'hasErrored' => true, 'error' => $ex->getMessage(), "deg" => $_POST ] ;
 }
+finally
+{
+	header("Access-Control-Allow-Origin: *");
+	header("Content-Type: application/json; charset=UTF-8");
+	$response["cookie"] = $_SESSION;
+	$response["session"] = $_SESSION;
+	echo json_encode($response);
+	ob_end_flush();
+	exit();
+}
+
 
 function isLoggedIn()
 {
-	return [ "result" => [ "isAuthenticated" => isset($_SESSION["user"]), "authFail" => false ] ];
+	$val = isset($_SESSION["user"]) ? $_SESSION["user"] : false;
+	return [ "result" => [ "isAuthenticated" => isset($_SESSION["user"]), "user" => $val ]];
 }
 
 function getAllPlayers(DbConnect $db) : array
@@ -51,7 +51,7 @@ function getAllPlayers(DbConnect $db) : array
 }
 
 function login(DbConnect $db)
-{   
+{
 	$result = [ "hasErrored" => false, "result" => null];
 	
 	try 
@@ -75,8 +75,8 @@ function login(DbConnect $db)
 		}
 		else
 		{
-			$result["result"] = $queryResult["result"];
 			$_SESSION["user"] = $queryResult["result"];
+			$result["result"] = $_SESSION["user"];
 		}
 	}
 	catch (Exception $ex)

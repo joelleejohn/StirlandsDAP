@@ -13,6 +13,25 @@
   }
 }
 
+div#root {
+  min-width: calc(100vw - 1em);
+  min-height: 50vh;
+}
+.rootGrid {
+  display: grid;
+  position: relative;
+
+  padding-top: 10px;
+  background-color: rgb(200, 200, 200);
+  min-height: 50vh;
+  grid: "side body" / 1fr 6fr;
+  width: 100%;
+}
+
+.rootGrid > div {
+  grid-area: body;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -22,6 +41,7 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding-right: 1rem;
 }
 
 .App-link {
