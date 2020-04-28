@@ -144,7 +144,7 @@ CREATE TABLE player (
 	lastname varchar(100) NOT NULL,
 	dateofbirth date NULL,
 	dateregistered date NOT NULL,
-	isactive bool NULL,
+	isactive bool NULL NOT NULL DEFAULT 1,
 	homenumber varchar(80) NULL,
 	phonenumber varchar(80) NOT NULL,
 	ishidden bool NOT NULL DEFAULT 0,

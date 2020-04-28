@@ -1,6 +1,6 @@
 export default class StirlandsHelper {
 
-	static async ajaxPost(method, formData, successCallback, failureCallback, authFailCallback = null){
+	static async ajaxPost(method, formData){
 		let returnData = {};
 		formData.append('queryMethod', method);
 		await fetch('http://localhost/StirlandsDAP/stirlandscricket/src/api/dbInferface.php', {  method: 'POST', body: formData, credentials: "same-origin"})

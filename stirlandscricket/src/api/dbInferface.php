@@ -47,7 +47,15 @@ function isLoggedIn()
 
 function getAllPlayers(DbConnect $db) : array
 {
-	return $db->query('SELECT rfuserroleid, rfuserrole FROM rfuserrole');
+	return [ 
+		"data" => $db->query('SELECT playerid, firstname, lastname, isactive FROM player'), 
+		"columns" => [ 
+			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null ],
+			[ "displayName" => "First Name", "key" => "firstname", "datatype" => "string", "sort" => 1 ],
+			[ "displayName" => "Last Name", "key" => "lastname", "datatype" => "string", "sort" => null ],
+			[ "displayName" => "Active Player", "key" => "isactive", "datatype" => "icon", "sort" => null ],
+		] 
+	];
 }
 
 function login(DbConnect $db)

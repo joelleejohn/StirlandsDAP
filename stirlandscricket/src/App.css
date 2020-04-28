@@ -20,7 +20,6 @@ div#root {
 .rootGrid {
   display: grid;
   position: relative;
-
   padding-top: 10px;
   background-color: rgb(200, 200, 200);
   min-height: 50vh;
@@ -44,6 +43,13 @@ div#root {
   padding-right: 1rem;
 }
 
+#menuButton {
+  position: relative;
+  left: 1rem;
+  height: 3rem;
+  width: 50%;
+  background-color: rgba(200, 50, 50, 0.8);
+}
 .App-link {
   color: #61dafb;
 }

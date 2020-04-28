@@ -3,11 +3,17 @@ import Menu from './components/Menu';
 import useStyles from './components/styles';
 import StirlandsHelper from './StirlandsHelper'
 import Backdrop from '@material-ui/core/Backdrop'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import {CircularProgress, CssBaseline, Button} from '@material-ui/core';
+import { Menu as MenuIcon } from '@material-ui/icons';
 import './App.css';
 import { withStyles } from '@material-ui/styles';
 
 class App extends Component {
+
+	  constructor(props) {
+	  	super(props);
+	  	this.handleDrawerState = this.handleDrawerState.bind(this);
+	  }
 
 	static styles = {
 		root: {
@@ -36,16 +42,22 @@ class App extends Component {
 	state = {
 		isAuthenticated: null,
 		user: null,
-		open: true
+		open: true,
+		drawerOpen: false,
 	}
 
 	async componentDidMount(){
-		let auth = await StirlandsHelper.checkAuthentication().then(resp => resp);
+		let auth = await StirlandsHelper.checkAuthentication();
 		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user })
 	}
 
-	render() {
+	handleDrawerState(){
+		console.log('handleDrawerState called');
+		this.setState({ drawerOpen: !this.state.drawerOpen });
+	}
 
+	render() {
+		console.log('App rendered')
 		const handleClose = () => {
 			this.setState({ open: false});
 		};
@@ -59,9 +71,12 @@ class App extends Component {
 		} else {
 
 			return (
-				<div class="rootGrid">
-					<Menu className={App.styles.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
-				</div>
+				<CssBaseline>
+					<div className="rootGrid">
+						<Button variant="contained" startIcon={<MenuIcon />} id="menuButton" onClick={this.handleDrawerState}>Menu</Button>
+						<Menu  drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={App.styles.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
+					</div>
+				</CssBaseline>
 			);
 		}
   }

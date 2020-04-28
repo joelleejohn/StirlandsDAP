@@ -12,34 +12,37 @@ import Login from "../pages/Login";
 
 export default class Menu extends Component {
 
+	constructor(props){
+		super(props);
+		this.toggleDrawer = this.toggleDrawer.bind(this);
+	}
+
 	state = {
 		isAuthenticated: this.props.isAuthenticated,
 		user: this.props.user,
-		drawerOpen: true,
+		drawerOpen: this.props.drawerOpen,
+		toggle: this.props.drawerTrigger,
 	}
 
 	ProtectedRoute({ children, isAuthenticated, ...rest }) {	
 		return (
-		  <Route
+			<Route
 			{...rest}
 			render={ ({location}) =>
-			  isAuthenticated ?	(children) : (
+				isAuthenticated ?	(children) : (
 				<Redirect
-				  to={{
+					to={{
 					pathname: "/login",
 					state: { from: location }
-				  }}
+					}}
 				/>
-			  )
+				)
 			}
-		  />
+			/>
 		);
-	  }
+	}
 
-	  toggleDrawer = () => {
-		  this.setState({ drawerOpen: !this.state.drawerOpen})
-	  }
-
+	toggleDrawer = () => this.props.drawerTrigger;
 
 	render(){
 
@@ -63,16 +66,19 @@ export default class Menu extends Component {
 				</li>
 			);
 		}
-
+		console.log('Drawer state is');
+		console.log(this.state.drawerOpen);
+		console.log('Drawer props are');
+		console.log(this.props.drawerTrigger);
 		return (
 			<Router>
 				<div>
-					<Drawer open={this.state.drawerOpen}>
+					<Drawer open={this.props.drawerOpen}>
 						<Paper elevation={0}>
 							<LoginButton isAuthenticated={ this.state.isAuthenticated } user={ this.state.user } />
 							<List>
-								<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.toggleDrawer}/>
-								<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } />
+								<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.props.drawerTrigger}/>
+								<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } onClick={this.props.drawerTrigger}/>
 							</List>
 						</Paper>
 					</Drawer>
