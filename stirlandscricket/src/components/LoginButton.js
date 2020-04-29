@@ -1,7 +1,9 @@
-import { Button } from '@material-ui/core';
+import { ExitToApp } from '@material-ui/icons';
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { withStyles } from '@material-ui/styles';
+import { Link, withRouter, Router } from 'react-router-dom';
+import { withStyles, withTheme } from '@material-ui/core/styles';
+import { Typography, Paper, IconButton, Button } from '@material-ui/core';
+import StirlandsHelper from '../StirlandsHelper';
 
 class LoginButton extends Component {
 	state = {
@@ -10,29 +12,48 @@ class LoginButton extends Component {
 	}
 
 
-	static style = {
+	static style = theme =>  {
+		return {
 		
-		lb: {
-			color: "rgba(255, 255, 255, 1)",
-			backgroundColor: "rgba(0, 0, 0, 0.7)",
-		},
-		ltext: {
-			maxWidth: '100%',
+			loginButton: {
+				color: theme.palette.secondary.contrastText,
+				backgroundColor: theme.palette.secondary.main,
+			},
+			loggedInText: {
+				maxWidth: '100%',
+				color: theme.palette.secondary.contrastText,
+			},
+			paper: {
+				backgroundColor: theme.palette.secondary.main,
+				height: '2rem',
+				width: '14rem',
+				placeContent: 'center',
+				alignContent: 'center',
+				alignItems: 'center',
+				display: 'grid',
+				gridAutoFlow: 'column',
+			}
 		}
 	}
 
 	render(){
 		let render;
+		const { classes } = this.props;
 
 		if (this.state.isLoggedIn){
 			render = (
-				<h3 className={LoginButton.style.ltext}>Welcome to Stirlands, { this.state.user.username }</h3>
+				<Paper className={classes.paper} elevation={3}>
+					<Typography component="span" className={classes.loggedInText}>Logged in as { this.state.user.username }</Typography>
+					<IconButton component={Link} to="/" onClick={this.props.logout}>
+						<ExitToApp />
+					</IconButton>
+				</Paper>
 			)
 		} else {
 			render = (
 				<div>
-					<Link to="/login" style={ LoginButton.style.lb }>
-						<Button style={this.style}>
+					<Link to="/login" className={ classes.lb }>
+						<Button className={ classes.loginButton }>
 							login
 						</Button>
 					</Link>
@@ -43,4 +64,4 @@ class LoginButton extends Component {
 	}
 }
 
-export default withRouter(withStyles(LoginButton.style)(LoginButton));
+export default withTheme(withStyles(LoginButton.style)(LoginButton));

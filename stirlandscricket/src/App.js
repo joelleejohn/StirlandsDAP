@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
-import Menu from './components/Menu';
-import useStyles from './components/styles';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Menu  from './components/Menu';
+import LoginButton  from './components/LoginButton';
 import StirlandsHelper from './StirlandsHelper'
-import Backdrop from '@material-ui/core/Backdrop'
-import {CircularProgress, CssBaseline, Button} from '@material-ui/core';
+import { Backdrop, CircularProgress, CssBaseline, AppBar, Typography, IconButton, Toolbar, ThemeProvider} from '@material-ui/core';
 import { Menu as MenuIcon } from '@material-ui/icons';
 import './App.css';
-import { withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { blue, pink } from '@material-ui/core/colors'
 
-class App extends Component {
+const muiTheme = createMuiTheme({
+  palette: {
+  	primary: {
+  		main: blue[700],
+	  },
+	  secondary: {
+		main: pink[500]
+	  },
+  },
+});
 
-	  constructor(props) {
-	  	super(props);
-	  	this.handleDrawerState = this.handleDrawerState.bind(this);
-	  }
-
-	static styles = {
+const styles = (theme = muiTheme) => {
+	return {
 		root: {
 			background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
 			border: 0,
@@ -35,8 +42,22 @@ class App extends Component {
 			backgroundColor: 'rgb(100, 100, 100)',
 			display: 'grid',
 			gridTemplateColumns: '1fr 3fr'
+		},
+		menuButton: {
+			marginRight: theme.spacing(2),
+		},
+		title: {
+			flexGrow: 1,
 		}
+	}
+}
 
+class App extends Component {
+
+	constructor(props) {
+		super(props);
+		this.handleDrawerState = this.handleDrawerState.bind(this);
+		this.logout = this.logout.bind(this);
 	}
 	
 	state = {
@@ -52,34 +73,50 @@ class App extends Component {
 	}
 
 	handleDrawerState(){
-		console.log('handleDrawerState called');
 		this.setState({ drawerOpen: !this.state.drawerOpen });
 	}
 
+	logout() {
+		StirlandsHelper.ajaxPost("logout", new FormData()).then(resolved => resolved);
+		this.forceUpdate();
+	}
+
 	render() {
-		console.log('App rendered')
+		const { classes } = this.props;
 		const handleClose = () => {
 			this.setState({ open: false});
 		};
 
 		if (this.state.isAuthenticated === null){
 			return (
-				<Backdrop className={App.styles.backdrop} open={ this.state.open } onClick={handleClose}>
+				<Backdrop className={classes.backdrop} open={ this.state.open } onClick={handleClose}>
 					<CircularProgress color="inherit" />
 				</Backdrop>
 			)
 		} else {
-
+			console.log(muiTheme.palette.primary)
 			return (
 				<CssBaseline>
-					<div className="rootGrid">
-						<Button variant="contained" startIcon={<MenuIcon />} id="menuButton" onClick={this.handleDrawerState}>Menu</Button>
-						<Menu  drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={App.styles.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
-					</div>
+					<ThemeProvider theme={muiTheme}>
+						<Router>
+							<AppBar position="static">
+								<Toolbar>
+									<IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu"  onClick={this.handleDrawerState} >
+										<MenuIcon />
+									</IconButton>
+									<Typography className={classes.title} variant="h6"> Stirlands Cricket Club </Typography>
+									<LoginButton  logout={this.logout} isAuthenticated={ this.state.isAuthenticated } user={ this.state.user } />
+								</Toolbar>
+							</AppBar>
+							<div className="rootGrid">
+								<Menu  drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={classes.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
+							</div>
+						</Router>
+					</ThemeProvider>
 				</CssBaseline>
 			);
 		}
   }
 }
 
-export default withStyles(App.styles)(App)
+export default withStyles(styles)(App)

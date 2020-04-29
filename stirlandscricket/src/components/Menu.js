@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route, Link as RouterLink, Redirect } from "react-router-dom";
-import './styles.css'
+import { Switch, Route, Link as RouterLink, Redirect, withRouter } from "react-router-dom";
 import Home from '../pages/Home';
 import { MenuBook, Menu as MenuIcon } from '@material-ui/icons';
-import { Button, Link, Paper, List, ListItem, ListItemText, ListItemIcon } from '@material-ui/core'
-import useStyles from '../components/styles';
+import { Button, Paper, List, ListItem, ListItemText, ListItemIcon, withTheme, withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import LoginButton from '../components/LoginButton';
 import Authenticate from "./Authenticate";
 import Login from "../pages/Login";
 
-export default class Menu extends Component {
+class Menu extends Component {
 
 	constructor(props){
 		super(props);
@@ -23,6 +20,17 @@ export default class Menu extends Component {
 		drawerOpen: this.props.drawerOpen,
 		toggle: this.props.drawerTrigger,
 	}
+
+    static style = theme => {
+    	return {
+    		grid: {
+    			placeSelf: 'center',
+    			height: '100%',
+    			width: '100%',
+    		}
+    	}
+    }
+
 
 	ProtectedRoute({ children, isAuthenticated, ...rest }) {	
 		return (
@@ -45,6 +53,7 @@ export default class Menu extends Component {
 	toggleDrawer = () => this.props.drawerTrigger;
 
 	render(){
+		const  { history, classes } = this.props;
 
 		function ListItemLink (props){
 			const { icon, primary, to, onClick } = props;
@@ -66,35 +75,30 @@ export default class Menu extends Component {
 				</li>
 			);
 		}
-		console.log('Drawer state is');
-		console.log(this.state.drawerOpen);
-		console.log('Drawer props are');
-		console.log(this.props.drawerTrigger);
 		return (
-			<Router>
-				<div>
-					<Drawer open={this.props.drawerOpen}>
-						<Paper elevation={0}>
-							<LoginButton isAuthenticated={ this.state.isAuthenticated } user={ this.state.user } />
-							<List>
-								<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.props.drawerTrigger}/>
-								<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } onClick={this.props.drawerTrigger}/>
-							</List>
-						</Paper>
-					</Drawer>
-					<Switch>
-						<Route exact path="/">
-							<Home auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
-						</Route>
-						<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
-							<Authenticate />
-						</this.ProtectedRoute>
-						<Route exact path="/login">
-							<Login/>
-						</Route>
-					</Switch>
-				</div>
-			</Router>
+			<div className={classes.grid}>
+				<Drawer open={this.props.drawerOpen}>
+					<Paper elevation={0}>
+						<List>
+							<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.props.drawerTrigger}/>
+							<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } onClick={this.props.drawerTrigger}/>
+						</List>
+					</Paper>
+				</Drawer>
+				<Switch>
+					<Route exact path="/">
+						<Home auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
+					</Route>
+					<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
+						<Authenticate />
+					</this.ProtectedRoute>
+					<Route exact path="/login">
+						<Login/>
+					</Route>
+				</Switch>
+			</div>
 		);
 	}
 }
+
+export default withRouter(withTheme(withStyles(Menu.style)(Menu)));

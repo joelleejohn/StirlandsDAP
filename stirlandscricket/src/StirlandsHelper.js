@@ -7,12 +7,6 @@ export default class StirlandsHelper {
 					  .then(async response => { returnData = await response.json()});
 
 		return returnData;
-		// if (returnData.authFail)
-		// 	authFailCallback();
-		// else if (returnData.hasErrored)
-		// 	failureCallback(returnData.error);
-		// else
-		// 	successCallback(returnData.result);
 	}
 
 	static checkAuthentication() {

@@ -31,8 +31,6 @@ finally
 {
 	header("Access-Control-Allow-Origin: *");
 	header("Content-Type: application/json; charset=UTF-8");
-	$response["cookie"] = $_SESSION;
-	$response["session"] = $_SESSION;
 	echo json_encode($response);
 	ob_end_flush();
 	exit();
@@ -48,12 +46,12 @@ function isLoggedIn()
 function getAllPlayers(DbConnect $db) : array
 {
 	return [ 
-		"data" => $db->query('SELECT playerid, firstname, lastname, isactive FROM player'), 
+		"data" => $db->query('SELECT playerid, firstname, lastname, isactive FROM player WHERE isactive = 1'), 
 		"columns" => [ 
-			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null ],
-			[ "displayName" => "First Name", "key" => "firstname", "datatype" => "string", "sort" => 1 ],
-			[ "displayName" => "Last Name", "key" => "lastname", "datatype" => "string", "sort" => null ],
-			[ "displayName" => "Active Player", "key" => "isactive", "datatype" => "icon", "sort" => null ],
+			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null, "icon" => "vpnkey" ],
+			[ "displayName" => "First Name", "key" => "firstname", "datatype" => null, "sort" => 1, "icon" => "accountbox"],
+			[ "displayName" => "Last Name", "key" => "lastname", "datatype" => null, "sort" => null, "icon" => "accountbox" ],
+			[ "displayName" => "Active Player", "key" => "isactive", "datatype" => "icon", "sort" => null, "icon" => "sportscricket" ],
 		] 
 	];
 }
@@ -66,12 +64,14 @@ function login(DbConnect $db)
 	{
 		$queryResult = $db->querySingleRecord(
 			"SELECT 
-				userid,
-				rfuserroleid,
-				username,
-				primaryemail,
-				secondaryemail 
-			FROM user 
+				user.userid,
+				user.rfuserroleid,
+				rfuserrole.rfuserrole,
+				user.username,
+				user.primaryemail,
+				user.secondaryemail 
+			FROM user
+			INNER JOIN rfuserrole ON rfuserrole.rfuserroleid = user.rfuserroleid 
 			WHERE username = :username 
 			AND password = :password",
 			 [ "username" => $_POST["username"], "password" => $_POST["password"]]);
@@ -95,6 +95,17 @@ function login(DbConnect $db)
 	finally
 	{
 		return $result;
+	}
+}
+
+function logout(){
+	try 
+	{
+		unset($_SESSION['user']);
+		return session_destroy();
+	} catch (Exception $ex)
+	{
+		return false;
 	}
 }
 

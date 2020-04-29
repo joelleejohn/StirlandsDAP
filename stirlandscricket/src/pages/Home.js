@@ -16,17 +16,15 @@ export default class Home extends Component {
     async componentDidMount(){
         let response = await StirlandsHelper.ajaxPost("getAllPlayers", new FormData());
         this.setState({ data: response.data, columns: response.columns, loadGrid: true });
-        console.log('response')
-        console.log(response)
     }
 
     render() {
         if (this.state.loadGrid){
             return (
-                <DataGrid data={this.state.data} columns={this.state.columns} sort={undefined} />
+                <DataGrid user={this.props.auth.user} data={this.state.data} columns={this.state.columns} allowEdit={true} title="Active players" />
             );
         } else {
-            return <p> No data yet</p>
+            return <p>No data yet</p>
         }
     }
 }

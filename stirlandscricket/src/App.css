@@ -12,18 +12,21 @@
     animation: App-logo-spin infinite 6s linear;
   }
 }
-
+html {
+  overflow-x: hidden;
+}
 div#root {
   min-width: calc(100vw - 1em);
-  min-height: 50vh;
+  min-height: 95vh;
 }
 .rootGrid {
   display: grid;
   position: relative;
   padding-top: 10px;
+  padding-right: 10px;
   background-color: rgb(200, 200, 200);
-  min-height: 50vh;
-  grid: "side body" / 1fr 6fr;
+  min-height: 95vh;
+  grid: "body" / auto ;
   width: 100%;
 }
 
@@ -52,6 +55,25 @@ div#root {
 }
 .App-link {
   color: #61dafb;
+}
+
+span.columnHeader {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-auto-flow: column;
+  gap: 0.5rem;
+  font-size: medium;
+  font-weight: bold;
+}
+#noData {
+  display: grid;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  place-content: center;
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes App-logo-spin {
