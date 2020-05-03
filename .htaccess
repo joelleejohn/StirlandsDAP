@@ -1,1 +1,6 @@
 SetEnv IsDevelopment true
+
+Options -MultiViews
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ /build/%{REQUEST_FILENAME} [QSA,L]
