@@ -21,7 +21,9 @@ class ComposerStaticInit4bede8c8b386e551835a3cc5e16a4ce9
     );
 
     public static $classMap = array (
+        'stirlands\\ColumnModel' => __DIR__ . '/../..' . '/src/api/columnModel.php',
         'stirlands\\DbConnect' => __DIR__ . '/../..' . '/src/api/dbConnect.php',
+        'stirlands\\QueryModel' => __DIR__ . '/../..' . '/src/api/queryModel.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

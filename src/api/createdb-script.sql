@@ -1,4 +1,3 @@
-USE jjohn1_dev;
 -- Table: battingstatistic
 CREATE TABLE battingstatistic (
 	battingstatusid int NOT NULL AUTO_INCREMENT,
@@ -11,7 +10,7 @@ CREATE TABLE battingstatistic (
 	fallofwicketout int NOT NULL,
 	fieldingstatisticid bigint NOT NULL,
 	CONSTRAINT PK_lkplayerbattingstatus PRIMARY KEY (battingstatusid)
-) COMMENT 'provides a link between a player''''s match stats and a batting status (optionally with a link to another player e.g. battingstatus = caught & player who caught = playerid)';
+);
 
 -- Table: club
 CREATE TABLE club (
@@ -28,7 +27,7 @@ CREATE TABLE emergencycontact (
 	firstname varchar(100) NULL,
 	lastname varchar(100) NULL,
 	relation varchar(50) NOT NULL,
-	ishidden bool NOT NULL,
+	ishidden tinyint NOT NULL DEFAULT 0,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_emergencycontact PRIMARY KEY (emergencycontactid)
 );
@@ -50,7 +49,7 @@ CREATE TABLE fieldingstatistic (
 CREATE TABLE league (
 	leagueid bigint NOT NULL AUTO_INCREMENT,
 	leaguename varchar(100) NOT NULL,
-	isactive bool NOT NULL DEFAULT 0,
+	isactive tinyint NOT NULL DEFAULT 0,
 	CONSTRAINT PK_league PRIMARY KEY (leagueid)
 );
 
@@ -63,10 +62,10 @@ CREATE TABLE lkplayermatch (
 	singleruns int NULL,
 	fours int NOT NULL,
 	sixes int NULL,
-	iscaptain bool NOT NULL DEFAULT 0,
-	iswicketkeeper bool NOT NULL DEFAULT 0,
-	isbatsman bool NOT NULL DEFAULT 0,
-	isbowler bool NOT NULL DEFAULT 0,
+	iscaptain tinyint NOT NULL DEFAULT 0,
+	iswicketkeeper tinyint NOT NULL DEFAULT 0,
+	isbatsman tinyint NOT NULL DEFAULT 0,
+	isbowler tinyint NOT NULL DEFAULT 0,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	UNIQUE INDEX DF_lkplayermatch_lkplayerteamid_matchid (lkplayerteamid,matchid),
 	CONSTRAINT lkplayermatch_pk PRIMARY KEY (lkplayermatchid)
@@ -79,8 +78,8 @@ CREATE TABLE lkplayerteam (
 	teamid bigint NOT NULL,
 	startdate date NOT NULL,
 	enddate date NULL,
-	iscurrent bool NULL,
-	iscaptain bool NULL,
+	iscurrent tinyint NULL,
+	iscaptain tinyint NULL,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_lkplayerteam_lkplayerteamid PRIMARY KEY (lkplayerteamid)
 );
@@ -133,7 +132,7 @@ CREATE TABLE official (
 	lastname varchar(100) NOT NULL,
 	emailaddress varchar(255) NULL,
 	role varchar(50) NOT NULL,
-	ishidden bool NOT NULL DEFAULT 0,
+	ishidden tinyint NOT NULL DEFAULT 0,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_personnel PRIMARY KEY (officialid)
 );
@@ -146,10 +145,10 @@ CREATE TABLE player (
 	lastname varchar(100) NOT NULL,
 	dateofbirth date NULL,
 	dateregistered date NOT NULL,
-	isactive bool NOT NULL DEFAULT 1,
+	isactive tinyint NOT NULL DEFAULT 1,
 	homenumber varchar(80) NULL,
 	phonenumber varchar(80) NOT NULL,
-	ishidden bool NOT NULL DEFAULT 0,
+	ishidden tinyint NOT NULL DEFAULT 0,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_player_playerid PRIMARY KEY (playerid)
 );
@@ -177,7 +176,7 @@ CREATE TABLE team (
 	clubid bigint NOT NULL,
 	locationid bigint NOT NULL,
 	teamname varchar(100) NOT NULL,
-	isactive bool NOT NULL DEFAULT 0,
+	isactive tinyint NOT NULL DEFAULT 1,
 	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_team_teamid PRIMARY KEY (teamid)
 );

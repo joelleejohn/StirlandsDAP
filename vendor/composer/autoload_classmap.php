@@ -6,5 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'stirlands\\ColumnModel' => $baseDir . '/src/api/columnModel.php',
     'stirlands\\DbConnect' => $baseDir . '/src/api/dbConnect.php',
+    'stirlands\\QueryModel' => $baseDir . '/src/api/queryModel.php',
 );
