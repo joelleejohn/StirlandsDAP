@@ -3,7 +3,7 @@ export default class StirlandsHelper {
 	static async ajaxPost(method, formData){
 		let returnData = {};
 		formData.append('queryMethod', method);
-		await fetch('https://bsch-jjohn1.chi.ac.uk/src/api/dbInferface.php', {
+		await fetch('https://bsch-jjohn1.chi.ac.uk/DAP522/src/api/dbInferface.php', {
 			method: 'POST',
 			body: formData,
 			credentials: "same-origin"})
