@@ -13,7 +13,7 @@ try
 {
 	if (isset($_POST['queryMethod']))
 	{
-		$db = new stirlands\DbConnect('mysql:host=localhost;dbname=test', 'root');
+		$db = new stirlands\DbConnect('mysql:host=localhost;dbname=JJOHN1_test');
 		$dbResponse = array();
 		$method = $_POST['queryMethod'];
 		$response = call_user_func($method, $db);

@@ -1,4 +1,6 @@
 SetEnv IsDevelopment true
+SetEnv dbUsername root
+SetEnv dbPassword 
 
 Options -MultiViews
     RewriteEngine On

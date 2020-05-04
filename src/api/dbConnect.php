@@ -38,7 +38,10 @@ class DbConnect
 	{
 		try
 		{
-			$this->database = new \PDO($this->connectionString, 'root', null);
+			$username = getenv("dbUsername");
+			$password = getenv("dbPassword");
+			
+			$this->database = new \PDO($this->connectionString, $username, $password);
 		}
 		catch (\PDOException $ex)
 		{
