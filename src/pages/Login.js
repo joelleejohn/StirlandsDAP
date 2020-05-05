@@ -6,6 +6,11 @@ import { Router, Redirect, useHistory, withRouter } from 'react-router-dom';
 
 class Login extends Component {
 
+	constructor(){
+		super();
+		this.handleLoginClick = this.handleLoginClick.bind(this);
+	}
+
 	state = { 
 		username: null, 
 		password: null, 
@@ -42,8 +47,21 @@ class Login extends Component {
 	}
 
 	async componentDidMount(){
-		let auth = await StirlandsHelper.checkAuthentication();
+		let auth;
+		await StirlandsHelper.checkAuthentication().then(resp =>{
+			console.log(resp);
+			auth = resp;
+		});
+		
 		this.setState({isLoggedIn: auth.result.isAuthenticated});
+	}
+
+	handleLoginClick(event){
+		let formData = new FormData();
+		Object.keys(this.state).forEach(key => formData.append(key, this.state[key]));
+
+		let resp = StirlandsHelper.ajaxPost("login", formData);
+		resp.then(r => this.setState({ isLoggedIn: r.result.isAuthenticated }));
 	}
 
 	render() {
@@ -63,13 +81,6 @@ class Login extends Component {
 			color: 'primary',
 		}
 
-		function handleLoginClick(event){
-			let formData = new FormData();
-			Object.keys(this.state).forEach(key => formData.append(key, this.state[key]));
-
-			let resp = StirlandsHelper.ajaxPost("login", formData);
-			resp.then(r => this.setState({ isLoggedIn: r.result.isAuthenticated }))
-		}
 
 		return (
 			<Container className={classes.grid}>
@@ -87,7 +98,7 @@ class Login extends Component {
 						</form>
 					</CardContent>
 					<CardActions>
-						<Button className={classes.loginButton} onClick={(event) => handleLoginClick(event)}>Login</Button>
+						<Button className={classes.loginButton} onClick={(event) => this.handleLoginClick(event)}>Login</Button>
 					</CardActions>
 				</Card>
 			</Container>

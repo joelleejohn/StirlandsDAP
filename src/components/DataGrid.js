@@ -54,29 +54,6 @@ export default class DataGrid extends Component {
 						editable={{...this.props.editable}}
 						sortable={true}
 					/> 
-	
-					// <TableContainer component={Paper}>
-					// 	<Table style={{minWidth: '650px'}}>
-					// 		<TableHead>
-					// 			<TableRow>
-					// 				{columns.map(col => (
-					// 					<TableCell key={ `col-${col.key}`} align="left">{col.displayName}</TableCell>
-					// 				))}
-					// 			</TableRow>
-					// 		</TableHead>
-					// 		<TableBody>
-					// 			{data.map(row => (
-					// 				<TableRow key={row.name}>
-					// 					{
-					// 						columns.map(col => (
-					// 							<TableCell component="th" scope="row" style={{minHeight: '100px', color: 'black', textAlign: 'center'}}>{row[col.key]}</TableCell>	
-					// 						))
-					// 					}
-					// 				</TableRow>
-					// 			))}
-					// 		</TableBody>
-					// 	</Table> 
-					// </TableContainer>
 				);
 			} else {
 				return (

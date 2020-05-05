@@ -14,7 +14,13 @@ export default class Home extends Component {
     }
 
     async componentDidMount(){
-        let response = await StirlandsHelper.ajaxPost("getAllPlayers", new FormData());
+        let response;
+        
+        await StirlandsHelper.ajaxPost("getAllPlayers", new FormData()).then( resp => {
+            console.log(resp);
+            response = resp; 
+        });
+
         this.setState({ data: response.data, columns: response.columns, loadGrid: true });
     }
 
