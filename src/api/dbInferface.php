@@ -46,7 +46,19 @@ function isLoggedIn()
 function getAllPlayers(DbConnect $db) : array
 {
 	return [ 
-		"data" => $db->query('SELECT playerid, firstname, lastname, isactive FROM player WHERE isactive = 1'), 
+		"data" => $db->query(
+"SELECT 
+	player.playerid,
+	player.firstname,
+	player.lastname,
+	player.isactive,
+    club.clubname,
+    team.teamname
+FROM player
+INNER JOIN lkplayerteam ON lkplayerteam.playerid = player.playerid
+INNER JOIN team ON team.teamid = lkplayerteam.teamid
+INNER JOIN club ON club.clubid = team.clubid AND club.clubid = 1
+WHERE lkplayerteam.iscurrent = 1"), 
 		"columns" => [ 
 			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null, "icon" => "vpnkey" ],
 			[ "displayName" => "First Name", "key" => "firstname", "datatype" => null, "sort" => 1, "icon" => "accountbox"],
