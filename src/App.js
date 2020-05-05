@@ -69,6 +69,7 @@ class App extends Component {
 
 	async componentDidMount(){
 		let auth = await StirlandsHelper.checkAuthentication();
+		console.log(auth)
 		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user })
 	}
 
