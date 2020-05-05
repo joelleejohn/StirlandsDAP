@@ -1,4 +1,4 @@
-SetEnv IsDevelopment true
+SetEnv connectionString mysql:host=localhost;dbname=JJOHN1
 SetEnv dbUsername root
 SetEnv dbPassword 
 
