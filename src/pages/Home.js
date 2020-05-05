@@ -15,7 +15,7 @@ export default class Home extends Component {
 
     async componentDidMount(){
         let response;
-        
+
         await StirlandsHelper.ajaxPost("getAllPlayers", new FormData()).then( resp => {
             console.log(resp);
             response = resp; 
@@ -25,6 +25,7 @@ export default class Home extends Component {
     }
 
     render() {
+        console.log(this.props);
         if (this.state.loadGrid){
             return (
                 <DataGrid user={this.props.auth.user} data={this.state.data} columns={this.state.columns} allowEdit={true} title="Active players" />
