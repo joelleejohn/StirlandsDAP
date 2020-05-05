@@ -1,6 +1,6 @@
 <?php
 namespace stirlands;
-use Exception;
+use Throwable;
 class DbConnect
 {
 	public function __construct(string $connString)
@@ -12,9 +12,9 @@ class DbConnect
 			$this->database->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
 			$this->database->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		}
-		catch (Exception $ex)
+		catch (Throwable $ex)
 		{
-			echo '##Unable to initialise database' . $ex->getMessage();
+			throw new Throwable('--Unable to initialise database' . $ex->getMessage());
 		}
 	}
 
@@ -28,13 +28,13 @@ class DbConnect
 		}
 		else 
 		{
-			throw new Exception('##Database connection has not been created.');
+			throw new Throwable('--Database connection has not been created.');
 		}
 	}
 
 	private $connectionString;
 
-	private function openConnection() : void
+	private function openConnection()
 	{
 		try
 		{
@@ -45,7 +45,7 @@ class DbConnect
 		}
 		catch (\PDOException $ex)
 		{
-			throw new Exception('##Connection Failed: ' . $ex->getMessage());
+			throw new Throwable('--Connection Failed: ' . $ex->getMessage());
 		}
 	}
 
@@ -57,13 +57,13 @@ class DbConnect
 
 			return $db->query($query)->fetchAll();
 		}
-		catch (Exception $ex)
+		catch (Throwable $ex)
 		{
-			throw new Exception('##Failed to run query. Error: ' . $ex->getMessage());
+			throw new Throwable('--Failed to run query. Error: ' . $ex->getMessage());
 		}
 	}
 
-	public function querySingleRecord(string $query, array $contexts = null, bool $isErrorOnZero = false, string $zeroError = null)
+	public function queryRecords(string $query, array $contexts = null, bool $isErrorOnZero = false, string $zeroError = null)
 	{
 		$retVal = ["error" => null, "result" => null];
 
@@ -76,7 +76,7 @@ class DbConnect
 			if (!is_null($contexts))
 			{
 				// Whatever contexts we have, convert that to a parameter.
-				// This avoids writing a procedure for each queery that uses parameters. 
+				// This avoids writing a procedure for each query that uses parameters. 
 				foreach ($contexts as $key => $val)
 				{
 					$dataType = \PDO::PARAM_STR;
@@ -86,7 +86,7 @@ class DbConnect
 						$searchFor = 'is';
 
 						if (substr($key, 0, strlen($searchFor)) === $searchFor) 
-							$dataType = \PDO::PARAM_BOOL;
+							$dataType = \PDO::PARAM_INT;
 						else
 							$dataType = \PDO::PARAM_INT;
 					}
@@ -98,14 +98,14 @@ class DbConnect
 			$result = $dbQuery->execute();
 			if ($result === true)
 			{
-				$returned = $dbQuery->fetch(\PDO::FETCH_ASSOC);
+				$returned = $dbQuery->fetchAll(\PDO::FETCH_ASSOC);
 				$retVal["result"] = $returned;
 				$retVal["error"] = !$returned ? $returned : false;
 			}
 		}
-		catch (Exception $ex)
+		catch (Throwable $ex)
 		{
-			throw new Exception('##Failed to run query. Error: ' . $ex->getMessage());
+			throw new Throwable('--Failed to run query. Error: ' . $ex->getMessage());
 		}
 		finally
 		{
@@ -113,5 +113,3 @@ class DbConnect
 		}
 	}
 }
-
-?>

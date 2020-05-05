@@ -20,7 +20,7 @@ try
 	}
 	else
 	{
-		throw new Exception('No POST data detected.');
+		throw new Throwable('No POST data detected.');
 	}
 }
 catch (Exception $ex)
@@ -57,11 +57,15 @@ function getAllPlayers(DbConnect $db) : array
 FROM player
 INNER JOIN lkplayerteam ON lkplayerteam.playerid = player.playerid
 INNER JOIN team ON team.teamid = lkplayerteam.teamid
-INNER JOIN club ON club.clubid = team.clubid AND club.clubid = 1
-WHERE lkplayerteam.iscurrent = 1"), 
+INNER JOIN club ON club.clubid = team.clubid AND club.clubid = :clubid
+WHERE lkplayerteam.iscurrent = :isactive",
+			//params
+			[ "clubid" => $_POST["clubid"], "isactive" => $_POST["isactive"] ]
+), 
 		"columns" => [ 
 			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null, "icon" => "vpnkey" ],
-			[ "displayName" => "First Name", "key" => "firstname", "datatype" => null, "sort" => 1, "icon" => "accountbox"],
+			[ "displayName" => "Club", "key" => "clubname", "datatype" => null, "sort" => 1, "icon" => "business" ],
+			[ "displayName" => "First Name", "key" => "firstname", "datatype" => null, "sort" => null, "icon" => "accountbox"],
 			[ "displayName" => "Last Name", "key" => "lastname", "datatype" => null, "sort" => null, "icon" => "accountbox" ],
 			[ "displayName" => "Active Player", "key" => "isactive", "datatype" => "icon", "sort" => null, "icon" => "sportscricket" ],
 		] 
@@ -74,7 +78,7 @@ function login(DbConnect $db)
 	
 	try 
 	{
-		$queryResult = $db->querySingleRecord(
+		$queryResult = $db->queryRecords(
 			"SELECT 
 				user.userid,
 				user.rfuserroleid,
@@ -86,6 +90,7 @@ function login(DbConnect $db)
 			INNER JOIN rfuserrole ON rfuserrole.rfuserroleid = user.rfuserroleid 
 			WHERE username = :username 
 			AND password = :password",
+			// params
 			 [ "username" => $_POST["username"], "password" => $_POST["password"]]);
 
 		if ($queryResult["error"])
@@ -99,7 +104,7 @@ function login(DbConnect $db)
 			$result["result"] = $_SESSION["user"];
 		}
 	}
-	catch (Exception $ex)
+	catch (Throwable $ex)
 	{
 		$result["hasErrored"] = true;
 		$result["error"] = $ex->getMessage();
@@ -116,14 +121,8 @@ function logout(){
 	{
 		unset($_SESSION['user']);
 		return session_destroy();
-	} catch (Exception $ex)
+	} catch (Throwable $ex)
 	{
 		return false;
 	}
 }
-
-
-
-
-
-?>
