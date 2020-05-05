@@ -14,7 +14,8 @@ class Login extends Component {
 	state = { 
 		username: null, 
 		password: null, 
-		isLoggedIn: false, 
+		isLoggedIn: false,
+		loginFailed: null,
 	}
 
 	static style = theme => {
@@ -63,7 +64,10 @@ class Login extends Component {
 		let resp = StirlandsHelper.ajaxPost("login", formData);
 		resp.then(r => {
 			console.log(r);
-			this.setState({ isLoggedIn: r.result.isAuthenticated })
+			this.setState({
+				isLoggedIn: r.result.isAuthenticated,
+				loginFailed: !r.result.isAuthenticated
+			})
 		});
 	}
 
@@ -84,17 +88,17 @@ class Login extends Component {
 			color: 'primary',
 		}
 
-
+		const error = this.state.loginFailed;
 		return (
 			<Container className={classes.grid}>
 				<Card>
 					<CardContent>
 						<form className={classes.form}>
 							<FormControl>
-								< TextField InputLabelProps={labelProps} label="Username" inputProps={inputProps} className={classes.formControl} id = "username" name = "usernmae" placeholder="Enter Username" onChange = { (event) => { this.setState({ username: event.target.value }) }} />
+								<TextField error={this.state.loginFailed} InputLabelProps={labelProps} label="Username" inputProps={inputProps} className={classes.formControl} id = "username" name = "usernmae" placeholder="Enter Username" onChange = { (event) => { this.setState({ username: event.target.value }) }} />
 							</FormControl>
 							<FormControl>
-								<TextField InputLabelProps={labelProps} label="Password" inputProps={inputProps} className={classes.formControl} id="password" name="password" type="password" placeholder="Enter password here" onChange={(event) =>  this.setState({password: event.target.value})}/>
+								<TextField error={this.state.loginFailed} InputLabelProps={labelProps} label="Password" inputProps={inputProps} className={classes.formControl} id="password" name="password" type="password" placeholder="Enter password here" onChange={(event) =>  this.setState({password: event.target.value})}/>
 							</FormControl>
 							<FormControl >
 							</FormControl>
