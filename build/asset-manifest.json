@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/DAP522/build/static/css/main.8b8af5af.chunk.css",
-    "main.js": "/DAP522/build/static/js/main.cfd0a82e.chunk.js",
-    "main.js.map": "/DAP522/build/static/js/main.cfd0a82e.chunk.js.map",
+    "main.js": "/DAP522/build/static/js/main.10e5369e.chunk.js",
+    "main.js.map": "/DAP522/build/static/js/main.10e5369e.chunk.js.map",
     "runtime-main.js": "/DAP522/build/static/js/runtime-main.e400a4bf.js",
     "runtime-main.js.map": "/DAP522/build/static/js/runtime-main.e400a4bf.js.map",
     "static/js/2.e5ce1696.chunk.js": "/DAP522/build/static/js/2.e5ce1696.chunk.js",
     "static/js/2.e5ce1696.chunk.js.map": "/DAP522/build/static/js/2.e5ce1696.chunk.js.map",
     "index.html": "/DAP522/build/index.html",
-    "precache-manifest.4568c43d209070fba57a6ffda54bc9fe.js": "/DAP522/build/precache-manifest.4568c43d209070fba57a6ffda54bc9fe.js",
+    "precache-manifest.b38b08761aa9259a573a29b9d8c04c47.js": "/DAP522/build/precache-manifest.b38b08761aa9259a573a29b9d8c04c47.js",
     "service-worker.js": "/DAP522/build/service-worker.js",
     "static/css/main.8b8af5af.chunk.css.map": "/DAP522/build/static/css/main.8b8af5af.chunk.css.map",
     "static/js/2.e5ce1696.chunk.js.LICENSE.txt": "/DAP522/build/static/js/2.e5ce1696.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.e400a4bf.js",
     "static/js/2.e5ce1696.chunk.js",
     "static/css/main.8b8af5af.chunk.css",
-    "static/js/main.cfd0a82e.chunk.js"
+    "static/js/main.10e5369e.chunk.js"
   ]
 }

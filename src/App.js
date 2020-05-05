@@ -103,7 +103,7 @@ class App extends Component {
 			return (
 				<CssBaseline>
 					<ThemeProvider theme={muiTheme}>
-						<Router>
+						<Router basename="DAP522/assignment/">
 							<AppBar position="static">
 								<Toolbar>
 									<IconButton className={classes.menuButton} edge="start" color="inherit" aria-label="menu"  onClick={this.handleDrawerState} >
