@@ -28,7 +28,7 @@ CREATE TABLE emergencycontact (
 	lastname varchar(100) NULL,
 	relation varchar(50) NOT NULL,
 	ishidden tinyint NOT NULL DEFAULT 0,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_emergencycontact PRIMARY KEY (emergencycontactid)
 );
 
@@ -66,7 +66,7 @@ CREATE TABLE lkplayermatch (
 	iswicketkeeper tinyint NOT NULL DEFAULT 0,
 	isbatsman tinyint NOT NULL DEFAULT 0,
 	isbowler tinyint NOT NULL DEFAULT 0,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	UNIQUE INDEX DF_lkplayermatch_lkplayerteamid_matchid (lkplayerteamid,matchid),
 	CONSTRAINT lkplayermatch_pk PRIMARY KEY (lkplayermatchid)
 );
@@ -80,7 +80,7 @@ CREATE TABLE lkplayerteam (
 	enddate date NULL,
 	iscurrent tinyint NULL,
 	iscaptain tinyint NULL,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_lkplayerteam_lkplayerteamid PRIMARY KEY (lkplayerteamid)
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE lkteamleague (
 	lkteamleagueid bigint NOT NULL AUTO_INCREMENT,
 	leagueid bigint NOT NULL,
 	teamid bigint NOT NULL,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	position int NOT NULL,
 	points int NOT NULL,
 	CONSTRAINT lkteamleague_pk PRIMARY KEY (lkteamleagueid)
@@ -105,7 +105,7 @@ CREATE TABLE location (
 	line4 varchar(255) NOT NULL,
 	postcode varchar(7) NOT NULL,
 	county varchar(255) NULL,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT location_pk PRIMARY KEY (locationid)
 );
 
@@ -120,7 +120,7 @@ CREATE TABLE `match` (
 	matchdate date NOT NULL,
 	umpires varchar(255) NULL,
 	scorers varchar(255) NULL,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_match_matchid PRIMARY KEY (matchid)
 );
 
@@ -133,7 +133,7 @@ CREATE TABLE official (
 	emailaddress varchar(255) NULL,
 	role varchar(50) NOT NULL,
 	ishidden tinyint NOT NULL DEFAULT 0,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_personnel PRIMARY KEY (officialid)
 );
 
@@ -149,7 +149,7 @@ CREATE TABLE player (
 	homenumber varchar(80) NULL,
 	phonenumber varchar(80) NOT NULL,
 	ishidden tinyint NOT NULL DEFAULT 0,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_player_playerid PRIMARY KEY (playerid)
 );
 
@@ -177,7 +177,7 @@ CREATE TABLE team (
 	locationid bigint NOT NULL,
 	teamname varchar(100) NOT NULL,
 	isactive tinyint NOT NULL DEFAULT 1,
-	lastmodified timestamp NOT NULL DEFAULT (CURRENT_TIMESTAMP) ON UPDATE CURRENT_TIMESTAMP,
+	lastmodified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT PK_team_teamid PRIMARY KEY (teamid)
 );
 
