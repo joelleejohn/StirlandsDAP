@@ -94,7 +94,7 @@ function login(DbConnect $db)
 	}
 	finally
 	{
-		$result["isAuthenticated"] = isset($_SESSION["user"]) && !is_null($_SESSION["user"]);
+		$result["isAuthenticated"] = isset($_SESSION["user"]);
 		return $result;
 	}
 }

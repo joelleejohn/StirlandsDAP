@@ -65,8 +65,8 @@ class Login extends Component {
 		resp.then(r => {
 			console.log(r);
 			this.setState({
-				isLoggedIn: r.result.isAuthenticated,
-				loginFailed: !r.result.isAuthenticated
+				isLoggedIn: r.isAuthenticated,
+				loginFailed: !r.isAuthenticated
 			})
 		});
 	}
