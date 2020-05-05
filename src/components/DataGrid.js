@@ -44,7 +44,7 @@ export default class DataGrid extends Component {
 				return colConv; 
 			});
 
-			// Only allow editing if user is a 
+			// Only allow editing if user is an administrator
 			if (this.state.user?.rfuserrole === 'Administrator' && this.props.allowEdit){
 				return (
 					<MaterialTable 

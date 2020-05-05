@@ -61,7 +61,10 @@ class Login extends Component {
 		Object.keys(this.state).forEach(key => formData.append(key, this.state[key]));
 
 		let resp = StirlandsHelper.ajaxPost("login", formData);
-		resp.then(r => this.setState({ isLoggedIn: r.result.isAuthenticated }));
+		resp.then(r => {
+			console.log(r);
+			this.setState({ isLoggedIn: r.result.isAuthenticated })
+		});
 	}
 
 	render() {
