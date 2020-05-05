@@ -25,6 +25,7 @@ export default class Home extends Component {
     }
 
     render() {
+        console.log('props before grid load');
         console.log(this.props);
         if (this.state.loadGrid){
             return (
