@@ -3,8 +3,10 @@ import logo from '../logo.svg';
 import DataGrid from '../components/DataGrid';
 import { Table, TableBody, TableCell } from '@material-ui/core';
 import StirlandsHelper from '../StirlandsHelper';
+import { withRouter } from 'react-router-dom';
+import { withStyles } from '@material-ui/styles';
 
-export default class Home extends Component {
+class Home extends Component {
 
     state = {
         isLoggedIn: this.props.auth.isAuthenticated,
@@ -36,3 +38,5 @@ export default class Home extends Component {
         }
     }
 }
+
+export default withRouter(Home)
