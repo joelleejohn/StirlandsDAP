@@ -12,7 +12,7 @@ export default class StirlandsHelper {
 		return returnData;
 	}
 
-	static checkAuthentication() {
-		return StirlandsHelper.ajaxPost('isLoggedIn', new FormData()).then(resp => resp);
+	static async checkAuthentication() {
+		return await StirlandsHelper.ajaxPost('isLoggedIn', new FormData());
 	}
 }
