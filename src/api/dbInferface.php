@@ -7,15 +7,39 @@ require '../../vendor/autoload.php';
 use stirlands\DbConnect;
 
 $_SESSION['IsDevelopment'] = (bool)getenv('IsDevelopment');
-$response = array();
-
+$response = [];
+const pages = [
+	[ 
+		"page" => "players",
+		"route" => "/players",
+		"title" => "Players",
+		"query" => "getPlayers",
+		"filter" => [
+			[
+				"fieldname" => "clubid",
+				"type" => "query",
+				"detail" => [
+					"query" => "clubs",
+				]
+			],
+			[
+				"fieldname" => "isactive",
+				"type" => "check",
+				"detail" => [
+					"defaultValue" => 0,
+				]
+			],
+		]
+	],
+];
 try
 {
 	if (isset($_POST['queryMethod']))
 	{
 		$db = new stirlands\DbConnect(getenv('connectionString'));
-		$dbResponse = array();
+
 		$method = $_POST['queryMethod'];
+
 		$response = call_user_func($method, $db);
 	}
 	else
@@ -36,6 +60,11 @@ finally
 	exit();
 }
 
+function pages()
+{
+	return pages;
+}
+
 
 function isLoggedIn()
 {
@@ -43,7 +72,7 @@ function isLoggedIn()
 	return [ "result" => [ "isAuthenticated" => isset($_SESSION["user"]), "user" => $val ]];
 }
 
-function getAllPlayers(DbConnect $db) : array
+function getPlayers(DbConnect $db) : array
 {
 	return [ 
 		"data" => $db->query(
@@ -124,5 +153,21 @@ function logout(){
 	} catch (Throwable $ex)
 	{
 		return false;
+	}
+}
+
+function clubs(DbConnect $db)
+{
+	$retVal = array();
+	// array of clubs. clubid, clubname
+	try 
+	{
+		$queryResult = $db->queryRecords(
+			"SELECT club.clubid, club.clubname, foundeddate"
+		);
+	}
+	catch (Throwable $ex)
+	{
+
 	}
 }

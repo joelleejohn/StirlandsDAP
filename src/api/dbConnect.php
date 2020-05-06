@@ -63,7 +63,7 @@ class DbConnect
 		}
 	}
 
-	public function queryRecords(string $query, array $contexts = null, bool $isErrorOnZero = false, string $zeroError = null)
+	public function queryRecords(string $query, array $contexts = null)
 	{
 		$retVal = ["error" => null, "result" => null];
 
