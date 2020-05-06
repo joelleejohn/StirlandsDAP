@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Switch, Route, Link as RouterLink, Redirect, withRouter } from "react-router-dom";
-import Home from '../pages/Home';
+import Page from '../pages/Page';
 import { MenuBook, Menu as MenuIcon } from '@material-ui/icons';
+import * as Icons from '@material-ui/icons';
 import { Button, Paper, List, ListItem, ListItemText, ListItemIcon, withTheme, withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import Authenticate from "./Authenticate";
@@ -19,6 +20,7 @@ class Menu extends Component {
 		user: this.props.user,
 		drawerOpen: this.props.drawerOpen,
 		toggle: this.props.drawerTrigger,
+		pages: this.props.pages,
 	}
 
     static style = theme => {
@@ -29,7 +31,9 @@ class Menu extends Component {
     			width: '100%',
     		}
     	}
-    }
+	}
+	
+	getIcon = (iconName) => Object.entries(Icons).find(([name, exported]) => name.toLowerCase() === iconName)[1]
 
 
 	ProtectedRoute({ children, isAuthenticated, ...rest }) {	
@@ -54,6 +58,10 @@ class Menu extends Component {
 
 	render(){
 		const  { history, classes } = this.props;
+		const auth = {
+			isAuthenticated: this.state.isAuthenticated,
+			user: this.state.user
+		};
 
 		function ListItemLink (props){
 			const { icon, primary, to, onClick } = props;
@@ -80,14 +88,24 @@ class Menu extends Component {
 				<Drawer open={this.props.drawerOpen}>
 					<Paper elevation={0}>
 						<List>
-							<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.props.drawerTrigger}/>
-							<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } onClick={this.props.drawerTrigger}/>
+							{ this.state.pages.forEach(page => {
+								const ItemIcon = this.getIcon(page.icon);
+								return <ListItemLink primary={page.displayName} to={page.route} icon={ <ItemIcon /> } onClick={this.props.drawerTrigger} />
+
+							})}
 						</List>
 					</Paper>
 				</Drawer>
 				<Switch>
+					{ this.state.pages.forEach(page => {
+						return (
+							<Route>
+								<Page query={page.query} auth={auth} filterFields={page.filterFields} formFields={page.formFields}/>
+							</Route>
+						);
+					})}
 					<Route exact path="/">
-						<Home auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
+						<Page auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
 					</Route>
 					<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
 						<Authenticate />

@@ -5,8 +5,11 @@
   "homepage": "https://bsch-jjohn1.chi.ac.uk/DAP522/build",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "^2.6.1",
     "@material-ui/core": "^4.9.11",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.52",
+    "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.9.10",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.4.0",

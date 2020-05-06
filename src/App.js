@@ -65,16 +65,21 @@ class App extends Component {
 		user: null,
 		open: true,
 		drawerOpen: false,
+		pages: [],
 	}
 
 	async componentDidMount(){
-		let auth;
+		let auth, foundPages;
+		
 		await StirlandsHelper.checkAuthentication().then(resp => {
-			console.log(resp);
 			auth = resp;
 		});
-		console.log(auth)
-		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user })
+
+		await StirlandsHelper.ajaxPost("pages", new FormData()).then(resp =>{
+			foundPages = resp;
+		});
+
+		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user, pages: foundPages })
 	}
 
 	handleDrawerState(){
@@ -114,7 +119,7 @@ class App extends Component {
 								</Toolbar>
 							</AppBar>
 							<div className="rootGrid">
-								<Menu  drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={classes.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
+								<Menu pages={this.state.pages} drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={classes.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
 							</div>
 						</Router>
 					</ThemeProvider>

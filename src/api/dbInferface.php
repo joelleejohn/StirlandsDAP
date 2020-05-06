@@ -9,24 +9,37 @@ use stirlands\DbConnect;
 $_SESSION['IsDevelopment'] = (bool)getenv('IsDevelopment');
 $response = [];
 const pages = [
+	[
+		"page" => "Home",
+		"route" => "/",
+		"title" => "Home",
+		"query" => "getPlayers",
+		"icon" => "menu",
+		"exact" => true,
+	],
 	[ 
 		"page" => "players",
 		"route" => "/players",
 		"title" => "Players",
 		"query" => "getPlayers",
-		"filter" => [
+		"icon" => "person",
+		"exact" => false,
+		"filterfields" => [
 			[
 				"fieldname" => "clubid",
+				"displayName" => "Club",
 				"type" => "query",
 				"detail" => [
 					"query" => "clubs",
-				]
+					"isRequired" => false,
+				],
 			],
 			[
 				"fieldname" => "isactive",
 				"type" => "check",
 				"detail" => [
 					"defaultValue" => 0,
+					"isRequired" => false,
 				]
 			],
 		]
@@ -74,6 +87,8 @@ function isLoggedIn()
 
 function getPlayers(DbConnect $db) : array
 {
+	$clubId = isset($_POST["clubid"]) ? $_POST["clubid"] : 1; 
+	$isActive = isset($_POST["isactive"]) ? $_POST["isactive"] : 1;
 	return [ 
 		"data" => $db->query(
 "SELECT 
@@ -89,7 +104,7 @@ INNER JOIN team ON team.teamid = lkplayerteam.teamid
 INNER JOIN club ON club.clubid = team.clubid AND club.clubid = :clubid
 WHERE lkplayerteam.iscurrent = :isactive",
 			//params
-			[ "clubid" => $_POST["clubid"], "isactive" => $_POST["isactive"] ]
+			[ "clubid" => $clubId , "isactive" => $isActive ]
 ), 
 		"columns" => [ 
 			[ "displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null, "icon" => "vpnkey" ],
@@ -120,7 +135,7 @@ function login(DbConnect $db)
 			WHERE username = :username 
 			AND password = :password",
 			// params
-			 [ "username" => $_POST["username"], "password" => $_POST["password"]]);
+			[ "username" => $_POST["username"], "password" => $_POST["password"]]);
 
 		if ($queryResult["error"])
 		{
