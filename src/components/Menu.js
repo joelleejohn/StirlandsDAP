@@ -107,7 +107,7 @@ class Menu extends Component {
 						);
 					})}
 					<Route exact path="/">
-						<Page auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
+						<Page auth={auth}/>
 					</Route>
 					<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
 						<Authenticate />
