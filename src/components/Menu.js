@@ -63,8 +63,7 @@ class Menu extends Component {
 			user: this.state.user
 		};
 		console.log('auth');
-		console.log(auth);
-
+		
 		function ListItemLink (props){
 			const { icon, primary, to, onClick } = props;
 
@@ -88,11 +87,11 @@ class Menu extends Component {
 		return (
 			<div className={classes.grid}>
 				<Drawer open={this.props.drawerOpen}>
-					<Paper elevation={0}>
+					<Paper elevation={3}>
 						<List>
 							{ this.state.pages.forEach(page => {
 								const ItemIcon = this.getIcon(page.icon);
-								return <ListItemLink primary={page.displayName} to={page.route} icon={ ItemIcon } onClick={this.props.drawerTrigger} />
+								return <ListItemLink primary={page.title} to={page.route} icon={ <ItemIcon/> } onClick={this.props.drawerTrigger} />
 
 							})}
 						</List>
@@ -102,12 +101,12 @@ class Menu extends Component {
 					{ this.state.pages.forEach(page => {
 						return (
 							<Route>
-								<Page query={page.query} auth={auth} filterFields={page.filterFields} formFields={page.formFields}/>
+								<Page {...auth} query={page.query} filterFields={page.filterFields} formFields={page.formFields}/>
 							</Route>
 						);
 					})}
-					<Route exact path="/">
-						<Page auth={auth}/>
+					 <Route exact path="/">
+						<Page {...auth} query="getplayers"/>
 					</Route>
 					<Route exact path="/login">
 						<Login/>

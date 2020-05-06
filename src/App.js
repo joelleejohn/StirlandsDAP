@@ -65,7 +65,7 @@ class App extends Component {
 		user: null,
 		open: true,
 		drawerOpen: false,
-		pages: [],
+		pages: null,
 	}
 
 	async componentDidMount(){
@@ -78,7 +78,8 @@ class App extends Component {
 		await StirlandsHelper.ajaxPost("pages", new FormData()).then(resp =>{
 			foundPages = resp;
 		});
-
+		console.log(auth);
+		console.log(foundPages);
 		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user, pages: foundPages })
 	}
 

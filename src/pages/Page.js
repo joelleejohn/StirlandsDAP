@@ -10,7 +10,7 @@ import { Check } from '@material-ui/icons';
 class Page extends Component {
 
     state = {
-        isLoggedIn: this.props.auth.isAuthenticated,
+        isLoggedIn: this.props.isAuthenticated,
         data: undefined,
         columns: undefined,
         loadGrid: false,
@@ -24,24 +24,16 @@ class Page extends Component {
             response = resp; 
         });
 
-        console.log('props');
-        console.log(this.props);
-        this.setState({ isLoggedIn: this.props.auth.isAuthenticated, data: response.data, columns: response.columns, loadGrid: true });
+        this.setState({ isLoggedIn: this.props.isAuthenticated, data: response.data, columns: response.columns, loadGrid: true });
     }
 
     render() {
-        console.log('props before grid load');
-        console.log(this.props);
-
-        const { formFields, filterFields } = this.props;
-        let MainData, FilterForm, Form;
+        let MainData;
         if (this.state.loadGrid){
-            MainData = <DataGrid user={this.props.auth.user} data={this.state.data} columns={this.state.columns} allowEdit={true} title="Active players" />
+           return <DataGrid user={this.props.user} data={this.state.data} columns={this.state.columns} title="Active players" />;
         } else {
-            MainData = <Typography>No data yet</Typography>
+            return <Typography>No data yet</Typography>
         }
-
-        return <Paper><MainData /></Paper>
     }
 }
 

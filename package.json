@@ -2,7 +2,7 @@
   "proxy": "http://localhost:443",
   "name": "stirlandscricket",
   "version": "0.1.0",
-  "homepage": "https://bsch-jjohn1.chi.ac.uk/DAP522/build",
+  "homepage": "http://localhost",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "^2.6.1",

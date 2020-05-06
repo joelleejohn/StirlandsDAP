@@ -1,5 +1,5 @@
-SetEnv connectionString mysql:host=localhost;dbname=JJOHN1_dev
-SetEnv dbUsername JJOHN1
+SetEnv connectionString mysql:host=localhost;dbname=test
+SetEnv dbUsername root
 SetEnv dbPassword 
 
 Options -MultiViews

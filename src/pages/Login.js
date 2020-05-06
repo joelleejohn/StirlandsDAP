@@ -63,13 +63,25 @@ class Login extends Component {
 
 		let resp = StirlandsHelper.ajaxPost("login", formData);
 		resp.then(r => {
-			console.log(r);
 			this.setState({
 				isLoggedIn: r.isAuthenticated,
 				loginFailed: !r.isAuthenticated
 			})
 		});
 	}
+
+	handleUsernameChange(event){
+		this.setState({
+			username: event.target.value
+		})
+	}
+
+	handlePasswordChange(event){
+		this.setState({
+			password: event.target.value
+		})
+	}
+
 
 	render() {
 		const { history, classes } = this.props;
@@ -101,7 +113,7 @@ class Login extends Component {
 									inputProps={inputProps} 
 									className={classes.formControl} 
 									id="username" name="usernmae" placeholder="Enter Username" 
-									onChange={ (event) => { this.setState({ username: event.target.value }) }} 
+									onChange={ (event) => { this.handleUsernameChange(event) }} 
 									onKeyPress={(event) => { 
 										if (event.key === 'Enter' && (this.state.username && this.state.password)){
 											this.handleLoginClick(event);
@@ -117,7 +129,7 @@ class Login extends Component {
 									inputProps={inputProps} 
 									className={classes.formControl} 
 									id="password" name="password" type="password" placeholder="Enter password here"
-									onChange={(event) =>  this.setState({password: event.target.value})}
+									onChange={(event) =>  this.handlePasswordChange(event)}
 									onKeyPress={(event) => { 
 										if (event.key === 'Enter' && (this.state.username && this.state.password)){
 											this.handleLoginClick(event);
