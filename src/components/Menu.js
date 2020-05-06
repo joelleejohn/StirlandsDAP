@@ -92,7 +92,7 @@ class Menu extends Component {
 						<List>
 							{ this.state.pages.forEach(page => {
 								const ItemIcon = this.getIcon(page.icon);
-								return <ListItemLink primary={page.displayName} to={page.route} icon={ <ItemIcon /> } onClick={this.props.drawerTrigger} />
+								return <ListItemLink primary={page.displayName} to={page.route} icon={ ItemIcon } onClick={this.props.drawerTrigger} />
 
 							})}
 						</List>
@@ -109,9 +109,6 @@ class Menu extends Component {
 					<Route exact path="/">
 						<Page auth={auth}/>
 					</Route>
-					<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
-						<Authenticate />
-					</this.ProtectedRoute>
 					<Route exact path="/login">
 						<Login/>
 					</Route>
