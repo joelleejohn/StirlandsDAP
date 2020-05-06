@@ -9,13 +9,8 @@ import { Check } from '@material-ui/icons';
 
 class Page extends Component {
 
-    constructor(){
-        super();
-        this.handleFilterCommit = this.handleFilterCommit.bind(this);
-    }
-
     state = {
-        isLoggedIn: false,
+        isLoggedIn: this.props.auth.isAuthenticated,
         data: undefined,
         columns: undefined,
         loadGrid: false,
