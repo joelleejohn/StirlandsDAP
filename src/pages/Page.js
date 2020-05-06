@@ -12,12 +12,10 @@ class Page extends Component {
     constructor(){
         super();
         this.handleFilterCommit = this.handleFilterCommit.bind(this);
-        console.log('props');
-        console.log(this.state);
     }
 
     state = {
-        isLoggedIn: this.props.auth.isAuthenticated,
+        isLoggedIn: false,
         data: undefined,
         columns: undefined,
         loadGrid: false,
@@ -31,8 +29,9 @@ class Page extends Component {
             response = resp; 
         });
 
-        
-        this.setState({ data: response.data, columns: response.columns, loadGrid: true });
+        console.log('props');
+        console.log(this.props);
+        this.setState({ isLoggedIn: this.props.auth.isAuthenticated, data: response.data, columns: response.columns, loadGrid: true });
     }
 
     render() {
