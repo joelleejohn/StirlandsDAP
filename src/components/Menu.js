@@ -62,6 +62,8 @@ class Menu extends Component {
 			isAuthenticated: this.state.isAuthenticated,
 			user: this.state.user
 		};
+		console.log('auth');
+		console.log(auth);
 
 		function ListItemLink (props){
 			const { icon, primary, to, onClick } = props;
