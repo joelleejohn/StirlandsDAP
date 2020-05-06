@@ -29,7 +29,12 @@ class Page extends Component {
             response = resp; 
         });
 
+        
         this.setState({ data: response.data, columns: response.columns, loadGrid: true });
+        console.log('state');
+        console.log(this.state);
+        console.log('props');
+        console.log(this.state);
     }
 
     render() {

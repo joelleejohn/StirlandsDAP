@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "be0d85b8a86ba0e689f7a34fedb42e28",
+    "revision": "3dbaf81856a5552902a1ae567b98d063",
     "url": "/DAP522/build/index.html"
   },
   {
-    "revision": "7221facf0980f5fe58a4",
+    "revision": "1b1a3b0c99784356906a",
     "url": "/DAP522/build/static/css/main.8b8af5af.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/DAP522/build/static/js/2.291b1c23.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "7221facf0980f5fe58a4",
-    "url": "/DAP522/build/static/js/main.94743ffd.chunk.js"
+    "revision": "1b1a3b0c99784356906a",
+    "url": "/DAP522/build/static/js/main.a728ac2a.chunk.js"
   },
   {
     "revision": "fa3f7a8b382ee756e48b",
