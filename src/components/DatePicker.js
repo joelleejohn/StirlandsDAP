@@ -7,7 +7,7 @@ import {
 } from '@material-ui/pickers';
 import 'date-fns';
 
-const DatePicker = (props) => {
+function DatePicker(props) {
 
 	// The first commit of Material-UI
 	const [selectedDate, setSelectedDate] = React.useState(new Date(Date.now()));

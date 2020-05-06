@@ -2,7 +2,7 @@ import React from 'react';
 import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
 
-const ComboBox = (props) => {
+function ComboBox(props) {
 	return (
       <Autocomplete
 		options={props.data}
