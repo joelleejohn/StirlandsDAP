@@ -12,6 +12,8 @@ class Page extends Component {
     constructor(){
         super();
         this.handleFilterCommit = this.handleFilterCommit.bind(this);
+        console.log('props');
+        console.log(this.state);
     }
 
     state = {
@@ -31,10 +33,6 @@ class Page extends Component {
 
         
         this.setState({ data: response.data, columns: response.columns, loadGrid: true });
-        console.log('state');
-        console.log(this.state);
-        console.log('props');
-        console.log(this.state);
     }
 
     render() {
