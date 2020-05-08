@@ -41,7 +41,7 @@ const styles = (theme = muiTheme) => {
 		baseGrid: {
 			backgroundColor: 'rgb(100, 100, 100)',
 			display: 'grid',
-			gridTemplateColumns: '1fr 3fr'
+			gridTemplateColumns: '1fr 3fr',
 		},
 		menuButton: {
 			marginRight: theme.spacing(2),
@@ -65,16 +65,20 @@ class App extends Component {
 		user: null,
 		open: true,
 		drawerOpen: false,
+		pages: [],
 	}
 
 	async componentDidMount(){
-		let auth;
+		let auth, foundPages;
 		await StirlandsHelper.checkAuthentication().then(resp => {
-			console.log(resp);
 			auth = resp;
 		});
-		console.log(auth)
-		this.setState({ isAuthenticated: auth.result.isAuthenticated, user: auth.result.user })
+
+		await StirlandsHelper.ajaxPost("pages", new FormData()).then(resp =>{
+			foundPages = resp;
+		});
+
+		this.setState({ isAuthenticated: auth.isAuthenticated, user: auth.user[0], pages: foundPages })
 	}
 
 	handleDrawerState(){
@@ -99,7 +103,6 @@ class App extends Component {
 				</Backdrop>
 			)
 		} else {
-			console.log(muiTheme.palette.primary)
 			return (
 				<CssBaseline>
 					<ThemeProvider theme={muiTheme}>
@@ -114,7 +117,7 @@ class App extends Component {
 								</Toolbar>
 							</AppBar>
 							<div className="rootGrid">
-								<Menu  drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={classes.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
+								<Menu  pages={this.state.pages} drawerOpen={this.state.drawerOpen} drawerTrigger={this.handleDrawerState} className={classes.root} isAuthenticated={this.state.isAuthenticated} user={this.state.user}/>
 							</div>
 						</Router>
 					</ThemeProvider>

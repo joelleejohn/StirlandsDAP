@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import { Switch, Route, Link as RouterLink, Redirect, withRouter } from "react-router-dom";
 import Home from '../pages/Home';
+import * as Icons from '@material-ui/icons';
 import { MenuBook, Menu as MenuIcon } from '@material-ui/icons';
 import { Button, Paper, List, ListItem, ListItemText, ListItemIcon, withTheme, withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
 import Authenticate from "./Authenticate";
 import Login from "../pages/Login";
+import Error404 from "../pages/Error404";
 
 class Menu extends Component {
 
@@ -19,6 +21,7 @@ class Menu extends Component {
 		user: this.props.user,
 		drawerOpen: this.props.drawerOpen,
 		toggle: this.props.drawerTrigger,
+		pages: this.props.pages,
 	}
 
     static style = theme => {
@@ -27,7 +30,15 @@ class Menu extends Component {
     			placeSelf: 'center',
     			height: '100%',
     			width: '100%',
-    		}
+			},
+			error404: {
+				placeSelf: 'center',
+				alignSelf: 'center',
+				display: 'grid',
+				gridAutoRows: '4rem',
+				width: '40%',
+
+			}
     	}
     }
 
@@ -53,6 +64,7 @@ class Menu extends Component {
 	toggleDrawer = () => this.props.drawerTrigger;
 
 	render(){
+		const getIcon = (iconName) => Object.entries(Icons).find(([name, exported]) => name.toLowerCase() === iconName)[1];
 		const  { history, classes } = this.props;
 
 		function ListItemLink (props){
@@ -80,20 +92,28 @@ class Menu extends Component {
 				<Drawer open={this.props.drawerOpen}>
 					<Paper elevation={0}>
 						<List>
-							<ListItemLink primary="Home" to="/" icon={ <MenuIcon /> } onClick={this.props.drawerTrigger}/>
-							<ListItemLink primary="Protected" to="/authenticate" icon={ <MenuBook /> } onClick={this.props.drawerTrigger}/>
+							<ListItemLink primary="Home" to="/players" icon={ < Icons.PlayArrow />}/>
+							{
+								this.state.pages.map(page => {
+									const Icon = getIcon(page.icon);
+									return <ListItemLink key={page.route} primary={page.title} to={page.route} icon={ <Icon /> } onClick={this.props.drawerTrigger}/>
+								})
+							}
 						</List>
 					</Paper>
 				</Drawer>
 				<Switch>
 					<Route exact path="/">
-						<Home auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
+						<Redirect to="/players"/>
 					</Route>
-					<this.ProtectedRoute path="/authenticate" isAuthenticated={this.state.isAuthenticated}>
-						<Authenticate />
-					</this.ProtectedRoute>
+					<Route path="/players">
+						<Home query="getPlayers" title="Players" auth={{ isAuthenticated: this.state.isAuthenticated, user: this.state.user }}/>
+					</Route>
 					<Route exact path="/login">
 						<Login/>
+					</Route>
+					<Route path="*">
+						<Error404 className={classes.error404}/>	
 					</Route>
 				</Switch>
 			</div>
@@ -101,4 +121,4 @@ class Menu extends Component {
 	}
 }
 
-export default withRouter(withTheme(withStyles(Menu.style)(Menu)));
+export default withRouter(withTheme(withStyles(Menu.style)(Menu)))

@@ -54,7 +54,7 @@ class Login extends Component {
 			auth = resp;
 		});
 		
-		this.setState({isLoggedIn: auth.result.isAuthenticated});
+		this.setState({isLoggedIn: auth.isAuthenticated});
 	}
 
 	handleLoginClick(event){

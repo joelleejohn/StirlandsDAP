@@ -22,11 +22,10 @@ div#root {
 .rootGrid {
   display: grid;
   position: relative;
-  padding-top: 10px;
-  padding-right: 10px;
+  padding: 10px;
   background-color: rgb(200, 200, 200);
-  min-height: 95vh;
-  grid: "body" / auto ;
+  min-height: 93.2vh;
+  grid: "body" auto / auto ;
   width: 100%;
 }
 

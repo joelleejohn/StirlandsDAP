@@ -280,6 +280,122 @@ ALTER TABLE team ADD CONSTRAINT FK_team_location FOREIGN KEY FK_team_location (l
 ALTER TABLE user ADD CONSTRAINT FK_user_rfuserrole FOREIGN KEY FK_user_rfuserrole (rfuserroleid)
 	REFERENCES rfuserrole (rfuserroleid);
 
+DELIMITER $$
+
+CREATE PROCEDURE `playeradd`
+(
+	IN nlocationid BIGINT,
+    IN sfirstname VARCHAR(100),
+    IN slastname VARCHAR(100),
+    IN ddateofbirth DATE,
+    IN ddateregistered DATE,
+    IN nisactive TINYINT(4),
+    IN shomenumber VARCHAR(14),
+    IN sphonenumber VARCHAR(14),
+    IN nteamid BIGINT(4),
+    IN niscaptain TINYINT(4),
+    IN niscurrent TINYINT(4)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+		SHOW ERRORS; 
+		ROLLBACK;
+	END;
+
+    START TRANSACTION;
+
+    INSERT INTO player (locationid, firstname, lastname, dateofbirth, dateregistered, isactive, homenumber, phonenumber)
+    VALUES (nlocationid, sfirstname, slastname, ddateofbirth, ddateregistered, nisactive, shomenumber, sphonenumber);
+
+    SET @nplayerid = LAST_INSERT_ID();
+
+    INSERT INTO lkplayerteam (playerid, teamid, startdate, enddate, iscaptain, iscurrent)
+    VALUES (@nplayerid, nteamid, ddateregistered, NULL, niscaptain, nisactive);
+    
+	COMMIT;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE `playeredit`(
+	IN nplayerid BIGINT,
+    IN nlocationid BIGINT,
+    IN sfirstname VARCHAR(100),
+    IN slastname VARCHAR(100),
+    IN ddateofbirth DATE,
+    IN ddateregistered DATE,
+    IN nisactive TINYINT(4),
+    IN shomenumber VARCHAR(14),
+    IN sphonenumber VARCHAR(14),
+    IN nteamid BIGINT(4),
+    IN niscaptain TINYINT(4),
+    IN niscurrent TINYINT(4)
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+		SHOW ERRORS; 
+		ROLLBACK;
+	END;
+
+    START TRANSACTION;
+	SET @noldteamid = (SELECT teamid FROM lkplayerteam WHERE playerid = nplayerid AND iscurrent ORDER BY lastmodified DESC LIMIT 1);
+    UPDATE player 
+    SET
+		locationid = nlocationid, 
+        firstname = sfirstname, 
+        lastname = slastname, 
+        dateofbirth = ddateofbirth, 
+        dateregistered = ddateregistered, 
+        isactive = niscurrent, 
+        homenumber = shomenumber,
+		phonenumber = sphonenumber
+    WHERE 
+		playerid = nplayerid;
+
+    IF nteamid <> @noldteamid THEN
+		INSERT INTO lkplayerteam (playerid, teamid, startdate, enddate, iscaptain, iscurrent)
+		VALUES (nplayerid, nteamid, ddateregistered, NULL, niscaptain, niscurrent);
+        
+	ELSE 
+		UPDATE lkplayerteam
+        SET 
+			startdate = ddateregistered,
+            iscaptain = niscaptain,
+            iscurrent = niscurrent
+		WHERE 
+			playerid = nplayerid 
+            AND teamid = nteamid; 
+	END IF;
+    
+	COMMIT;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE `playerdelete`
+(
+	IN nplayerid BIGINT
+)
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION 
+    BEGIN 
+		SHOW ERRORS; 
+		ROLLBACK;
+	END;
+
+	DELETE FROM lkplayerteam
+	WHERE playerid = nplayerid;
+
+	DELETE FROM player 
+	WHERE playerid = nplayerid;
+	
+	COMMIT;
+END$$
+DELIMITER ;
+
 -- Seed values for table: rfuserrole
 INSERT INTO rfuserrole (rfuserroleid, rfuserrole)
 VALUES 
@@ -356,7 +472,7 @@ VALUES
 	(2, 11, 0, 0),
 	(2, 12, 0, 0);
 
-INSERT INTO player (playerid, locationid, firstname, lastname, dateofbirth, dateregistered, isactive, homenumber, phonenumber) 
+INSERT INTO player (playerid, locationid, firstname, lastname, dateofbirth, dateregistered, homenumber, phonenumber) 
 VALUES
 	(1, 2, 'Stefanie', 'Davenport', '1996-05-18', '2017-01-18', '6152042875', '7171794942'),
 	(2, 1, 'Laetitia', 'Berthomier', '2002-08-21', '2016-05-27', '8921868098', '6454187747'),
@@ -494,7 +610,6 @@ VALUES
 INSERT INTO lkplayerteam (playerid, teamid, startdate)
 VALUES
  	(1, 1, '2015-08-05'),
- 	(1, 1, '2015-08-05'),
  	(2, 1, '2016-06-21'),
  	(3, 1, '2014-02-08'),
  	(4, 1, '2014-03-01'),
@@ -625,17 +740,8 @@ VALUES
 	(129, 12, '2016-02-29'),
 	(130, 12, '2017-08-09'),
 	(131, 12, '2017-12-22'),
-	(132, 12, '2019-02-07'),
-	(133, 12, '2015-03-11'),
-	(134, 12, '2015-08-14'),
-	(135, 12, '2016-03-08'),
-	(136, 12, '2015-06-27'),
-	(137, 12, '2018-05-19'),
-	(138, 2, '2017-06-20'),
-	(139, 4, '2017-01-11'),
-	(140, 5, '2016-09-24'),
-	(141, 6, '2015-12-08'),
-	(142, 2, '2015-10-06');
+	(132, 12, '2019-02-07');
+
 
 -- End of file.
 
