@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import * as Icons from '@material-ui/icons';
-import { Typography, Button, Paper, CardActions, Card, Modal, FormControl, TextField} from '@material-ui/core';
+import { withTheme, Typography, Switch, Button, Paper, CardActions, Card, Modal, FormControl, TextField, FormControlLabel } from '@material-ui/core';
 import MaterialTable  from 'material-table';
 import { withStyles } from '@material-ui/styles';
 import { Autocomplete } from '@material-ui/lab';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+import moment from 'moment';
 import StirlandsHelper from '../StirlandsHelper';
 
 class DataGrid extends Component {
@@ -16,32 +19,43 @@ class DataGrid extends Component {
 		this.handleEdit = this.handleEdit.bind(this);
 		this.getFormDetails = this.getFormDetails.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
+		this.handleComboChange = this.handleComboChange.bind(this);
+		this.handleDateChange = this.handleDateChange.bind(this);
 	}
 
-	static styles = {
-		noData: {
-			position: 'absolute',
-			fontSize: '20px',
-			display: 'grid',
-			alignItems: 'center',
-			alignContent: 'center',
-			justifyContent: 'center',
-			placeContent: 'center',
-		},
-		form: {
-			display: 'grid'
-		},
-		modalForm: {
-			display: 'grid',
-			position: 'absolute',
-			left: '30%',
-			top: '50%',
-			transform: 'translate(50%, -50%)',
-			minHeight: '50%',
-			minWidth: '400px',
-			padding: '1rem',
+	static styles = (theme) =>{ 
+		return {
+			noData: {
+				position: 'absolute',
+				fontSize: '20px',
+				display: 'grid',
+				alignItems: 'center',
+				alignContent: 'center',
+				justifyContent: 'center',
+				placeContent: 'center',
+			},
+			form: {
+				display: 'grid'
+			},
+			modalForm: {
+				display: 'grid',
+				position: 'absolute',
+				left: '30%',
+				top: '50%',
+				transform: 'translate(50%, -50%)',
+				minHeight: '50%',
+				minWidth: '400px',
+				padding: '1rem',
+				gap: '1rem'
+			},
+			submit: {
+				paddingTop: '10px',
+				backgroundColor: theme.palette.secondary.main,
+				color: theme.palette.secondary.contrastText
+			}
 		}
 	}
+
 
     state = {
 		data: this.props.data,
@@ -63,6 +77,8 @@ class DataGrid extends Component {
 		locationData: null,
 		teamData: null,
 		playerData: null,
+		dateregisteredraw: new moment(),
+		dateofbirthraw: new moment(),
 	}
 
 	handleSelection(newSelection) {
@@ -89,14 +105,37 @@ class DataGrid extends Component {
 		console.log(this.state)
 	}
 
-	handleInputChange(event, prefix) {
+	handleInputChange(event, valueOverride) {
 		const target = event.target;
 		const value = target.name.startsWith('is') ? target.checked : target.value;
 		const name = target.name;
-
+		console.log(name)
+		console.log(value)
 		this.setState({
-			[name]: value
+			[name]: valueOverride ? valueOverride : value
 		});
+	}
+
+	handleComboChange(event, data, fieldname) {
+		const name = fieldname.substring(0, fieldname.length - 2)
+		const nameVersion = name + 'name';
+		console.log(event)
+		console.log(data)
+		console.log(nameVersion)
+		this.setState({
+			[fieldname] : data[fieldname],
+			[nameVersion] : data[nameVersion],
+			[name]: data
+		});
+	}
+
+	handleDateChange(fieldName, selectedDate){
+		const rawFieldName = `${fieldName}raw`;
+		console.log(selectedDate.format('YYYY-MM-DD'))
+		this.setState({ 
+			[fieldName]: selectedDate.format('YYYY-MM-DD'),
+			[rawFieldName]: selectedDate,					
+		})
 	}
 
 
@@ -180,10 +219,11 @@ class DataGrid extends Component {
 					return (
 							<Modal open={this.state.isOpenAdd} onClose={(event) => this.handleEdit()}>
 								<Card className={classes.modalForm}>
+									<MuiPickersUtilsProvider utils={MomentUtils}>
 									<FormControl>
 										<TextField
 											label="First Name"
-											value={this.state.player?.firstname}
+											value={this.state?.firstname}
 											id="firstname" name="firstname" placeholder="Enter first name"
 											onBlur={(event) =>  this.handleInputChange(event)}
 										/>
@@ -191,30 +231,35 @@ class DataGrid extends Component {
 									<FormControl>
 										<TextField
 											label="Last Name"
-											value={this.state.player?.lastname}
+											defaultValue={this.state?.lastname}
 											id="lastname" name="lastname" placeholder="Enter last name"
 											onBlur={(event) =>  this.handleInputChange(event)}
 										/>
 									</FormControl>
 									<Autocomplete 
 										options={this.state.teamData}
-										id="locationid"
-										name="locationid"
-										value={this.state.playerData?.locationname}
+										id="teamid"
+										name="teamid"
+										value={this.state?.team}
 										renderInput={(params) => <TextField {...params} label="Team" variant="outlined"/>}
 										getOptionLabel={(option) => option.teamname }
-										onChange={(event, data) => this.handleInputChange()}
+										onChange={(event, data) => this.handleComboChange(event, data, 'teamid')}
 									/>
 									<Autocomplete 
 										options={this.state.locationData}
 										id="locationid"
 										name="locationid"
+										value={this.state?.location}
 										renderInput={(params) => <TextField {...params} label="Location" variant="outlined"/>}
 										getOptionLabel={(option) => option.locationname }
+										onChange={(event, data) => this.handleComboChange(event, data, 'locationid')}
 									/>
+										<DatePicker disableFuture format="DD-MM-YYYY" id="dateregistered" name="dateregistered" label="Date Registered" onChange={(moment) => this.handleDateChange("dateregistered", moment)} />
+										<DatePicker disableFuture format="DD-MM-YYYY" id="dateofbirth" value={this.state.dateofbirthraw} name="dateofbirth" label="D.O.B" onChange={(moment) => this.handleDateChange("dateofbirth", moment)} />
 									<CardActions>
-										<Button onClick={(event) => this.handleLoginClick(event)}>Login</Button>
+										<Button className={classes.submit} onClick={(event) => this.getFormDetails(event)}>Add</Button>
 									</CardActions>		
+									</MuiPickersUtilsProvider>
 								</Card>
 							</Modal>
 						);
@@ -309,4 +354,4 @@ class DataGrid extends Component {
     }
 }
 
-export default withStyles(DataGrid.styles)(DataGrid)
+export default withTheme(withStyles(DataGrid.styles)(DataGrid))
