@@ -100,7 +100,12 @@ INNER JOIN location ON location.locationid = player.locationid
 INNER JOIN club ON club.clubid = team.clubid AND club.clubid = (SELECT CASE WHEN :clubid = -1 THEN 1 ELSE :clubbid END)
 WHERE lkplayerteam.iscurrent = (SELECT CASE WHEN :isactive = -1 THEN lkplayerteam.iscurrent ELSE :isactivee END)",
 			//params
-			["clubid" => $clubId, "isactive" => $isActive, "clubbid" => $clubId, "isactivee" => $isActive ]
+			[
+				"clubid" => ["value" => $clubId, "dt" => PDO::PARAM_INT],
+				"isactive" => ["value" =>$isActive, "dt" => PDO::PARAM_INT], 
+				"clubbid" => ["value" => $clubId, "dt" => PDO::PARAM_INT],
+				"isactivee" => ["value" =>$isActive, "dt" => PDO::PARAM_INT], 
+			]
 		),
 		"columns" => [
 			["displayName" => "PlayerID", "key" => "playerid", "datatype" => "numeric", "sort" => null, "icon" => "vpnkey"],
@@ -129,10 +134,24 @@ function getPlayer(DbConnect $db){
 		INNER JOIN lkplayerteam ON lkplayerteam.playerid = player.playerid AND lkplayerteam.iscurrent
 		WHERE player.playerid = :playerid
 		",
-		["playerid" => $_POST["playerid"] ] );
+		["playerid" => ["value" => $_POST["locationid"], "dt" => PDO::PARAM_INT] ] );
 }
 
 function addPlayer(DbConnect $db){
+	$params = [
+		"locationid" => ["value" => $_POST["locationid"], "dt" => PDO::PARAM_INT],
+		"firstname" => ["value" => $_POST["firstname"], "dt" => PDO::PARAM_STR],
+		"lastname" => ["value" => $_POST["lastname"], "dt" => PDO::PARAM_STR],
+		"dateofbirth" => ["value" => $_POST["dateofbirth"], "dt" => PDO::PARAM_STR],
+		"dateregistered" => ["value" => $_POST["dateregistered"], "dt" => PDO::PARAM_STR],
+		"isactive" => ["value" => $_POST["isactive"], "dt" => PDO::PARAM_INT],
+		"homenumber" => ["value" => $_POST["homenumber"], "dt" => PDO::PARAM_STR],
+		"phonenumber" => ["value" => $_POST["phonenumber"], "dt" => PDO::PARAM_STR],
+		"teamid" => ["value" => $_POST["teamid"], "dt" => PDO::PARAM_INT],
+		"iscurrent" => ["value" => $_POST["iscurrent"], "dt" => PDO::PARAM_INT],
+		"iscaptain" => ["value" => $_POST["iscaptain"], "dt" => PDO::PARAM_INT],
+	];
+
 	return $db->queryRecords(
 		"CALL `playeradd`(
 			 :locationid,
@@ -147,23 +166,27 @@ function addPlayer(DbConnect $db){
 			 :iscaptain, 
 			 :iscurrent)",
 		//params
-		[
-			"locationid" => $_POST["locationid"], 
-			"firstname" => $_POST["firstname"],
-			"lastname" => $_POST["lastname"],
-			"dateofbirth" => $_POST["dateofbirth"],
-			"dateregistered" => $_POST["dateregistered"],
-			"isactive" => $_POST["isactive"],
-			"homenumber" => $_POST["homenumber"],
-			"phonenumber" => $_POST["phonenumber"],
-			"teamid" => $_POST["teamid"],
-			"iscurrent" => $_POST["iscurrent"],
-		]
+		$params
 	);
 }
 
 function editPlayer(DbConnect $db)
 {
+	$params = [
+		"playerid" => ["value" => $_POST["playerid"], "dt" => PDO::PARAM_INT],
+		"locationid" => ["value" => $_POST["locationid"], "dt" => PDO::PARAM_INT],
+		"firstname" => ["value" => $_POST["firstname"], "dt" => PDO::PARAM_STR],
+		"lastname" => ["value" => $_POST["lastname"], "dt" => PDO::PARAM_STR],
+		"dateofbirth" => ["value" => $_POST["dateofbirth"], "dt" => PDO::PARAM_STR],
+		"dateregistered" => ["value" => $_POST["dateregistered"], "dt" => PDO::PARAM_STR],
+		"isactive" => ["value" => $_POST["isactive"], "dt" => PDO::PARAM_INT],
+		"homenumber" => ["value" => $_POST["homenumber"], "dt" => PDO::PARAM_STR],
+		"phonenumber" => ["value" => $_POST["phonenumber"], "dt" => PDO::PARAM_STR],
+		"teamid" => ["value" => $_POST["teamid"], "dt" => PDO::PARAM_INT],
+		"iscurrent" => ["value" => $_POST["iscurrent"], "dt" => PDO::PARAM_INT],
+		"iscaptain" => ["value" => $_POST["iscaptain"], "dt" => PDO::PARAM_INT],
+	];
+
 	return $db->queryRecords(
 		"CALL `playeradd`(
 			 :playerid
@@ -179,30 +202,16 @@ function editPlayer(DbConnect $db)
 			 :iscaptain, 
 			 :iscurrent)",
 		//params
-		[
-			"playerid" => $_POST["playerid"],
-			"locationid" => $_POST["locationid"],
-			"firstname" => $_POST["firstname"],
-			"lastname" => $_POST["lastname"],
-			"dateofbirth" => $_POST["dateofbirth"],
-			"dateregistered" => $_POST["dateregistered"],
-			"isactive" => $_POST["isactive"],
-			"homenumber" => $_POST["homenumber"],
-			"phonenumber" => $_POST["phonenumber"],
-			"teamid" => $_POST["teamid"],
-			"iscurrent" => $_POST["iscurrent"],
-		]
+		$params
 	);
 }
-
-
 
 function deletePlayer(DbConnect $db){
 	return $db->queryRecords(
 			
 "CALL `playerdelete`(:playerid)",
 			//params
-			[ "playerid" => $_POST["playerid"] ]);
+			[ "playerid" => [ "value" => $_POST["playerid"], "dt" => PDO::PARAM_INT ] ]);
 }
 
 function login(DbConnect $db)
@@ -223,7 +232,7 @@ function login(DbConnect $db)
 			WHERE username = :username 
 			AND password = :password",
 			// params
-			["username" => $_POST["username"], "password" => $_POST["password"]]
+			["username" => [ "value" => $_POST["username"], "dt" => PDO::PARAM_STR ], "password" => ["value" => $_POST["password"], "dt" => PDO::PARAM_STR] ]
 		);
 
 		if ($queryResult["error"]) {

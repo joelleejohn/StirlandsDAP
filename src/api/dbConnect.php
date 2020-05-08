@@ -67,22 +67,12 @@ class DbConnect
 				// Whatever contexts we have, convert that to a parameter.
 				// This avoids writing a procedure for each query that uses parameters. 
 				foreach ($contexts as $key => $val) {
-					$dataType = \PDO::PARAM_STR;
 
-					if (is_numeric($val)) {
-						$searchFor = 'is';
-
-						if (substr($key, 0, strlen($searchFor)) === $searchFor)
-							$dataType = \PDO::PARAM_INT;
-						else
-							$dataType = \PDO::PARAM_INT;
-					}
-
-					$dbQuery->bindValue(':' . $key, $val, $dataType);
+					$dbQuery->bindValue(':' . $key, $val["value"], $val["dt"]);
 				}
 			}
 			$result = $dbQuery->execute();
-			$dbQuery->debugDumpParams();
+			$retVal["debug"] = $contexts;
 			if ($result === true) {
 				$returned = $dbQuery->fetchAll(\PDO::FETCH_ASSOC);
 				$retVal["result"] = $returned;

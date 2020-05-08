@@ -21,6 +21,7 @@ class DataGrid extends Component {
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.handleComboChange = this.handleComboChange.bind(this);
 		this.handleDateChange = this.handleDateChange.bind(this);
+		this.reset = this.reset.bind(this);
 	}
 
 	static styles = (theme) =>{ 
@@ -66,12 +67,6 @@ class DataGrid extends Component {
 		isOpenAdd: false,
 		isOpenEdit: false,
 		isOpenDelete: false,
-		player: {
-			firstname: null,
-			lastname: null,
-			locationid: null,
-			teamid: null,
-		},
 		editPlayer: null,
 		deletePlayer: [],
 		locationData: null,
@@ -86,12 +81,17 @@ class DataGrid extends Component {
 	}
 
 	handleDelete(selected){
-		this.setState({ isOpenDelete: !this.state.isOpenDelete });
+		this.state.selected.forEach(row => {
+			const formData = new FormData();
+			formData.append('playerid', row.playerid);
+			StirlandsHelper.ajaxPost('deletePlayer', formData);
+		});
+		this.props.refreshData();
 	}
 
 	handleEdit(){
 		const newState = !this.state.isOpenEdit;
-		this.setState({ isOpenEdit: newState });
+		this.setState({ isOpenEdit: newState, playerData: newState ? this.state.selected[0]: null});
 	}
 
 	handleAdd(){
@@ -99,29 +99,18 @@ class DataGrid extends Component {
 		this.setState({ isOpenAdd: newState });
 	}
 
-	componentDidUpdate(){
-		
-		console.log('triggered update')
-		console.log(this.state)
-	}
-
 	handleInputChange(event, valueOverride) {
 		const target = event.target;
 		const value = target.name.startsWith('is') ? target.checked : target.value;
 		const name = target.name;
-		console.log(name)
-		console.log(value)
 		this.setState({
-			[name]: valueOverride ? valueOverride : value
+			[name]: value
 		});
 	}
 
 	handleComboChange(event, data, fieldname) {
 		const name = fieldname.substring(0, fieldname.length - 2)
 		const nameVersion = name + 'name';
-		console.log(event)
-		console.log(data)
-		console.log(nameVersion)
 		this.setState({
 			[fieldname] : data[fieldname],
 			[nameVersion] : data[nameVersion],
@@ -138,23 +127,46 @@ class DataGrid extends Component {
 		})
 	}
 
+	reset(){
+		this.props.refreshData();
+		this.setState({ isOpenAdd: false, isOpenEdit: false, isOpenDelete: false})
+	}
 
 	getFormDetails(method){
 		let formData = new FormData();
-		Object.keys(this.state.player).forEach(key => formData.append(key, this.state[key]));
-		StirlandsHelper.ajaxPost(method, formData).then(this.props.refreshData);
+		let player = {
+			...{ playerid: this.state.playerid },
+			...{ firstname: this.state.firstname },
+			...{ lastname: this.state.lastname },
+			...{ dateofbirth: this.state.dateofbirth },
+			...{ dateregistered: this.state.dateregistered },
+			...{ isactive: this.state.isactive },
+			...{ iscaptain: this.state.iscaptain },
+			...{ iscurrent: this.state.iscurrent },
+			...{ homephone: this.state.homenumber },
+			...{ phonenumber: this.state.phonenumber },
+			...{ locationid: this.state.locationid },
+			...{ teamid: this.state.teamid},
+
+		}
+		Object.keys(player).forEach(key => {
+			let value = player[key];
+			if (key.startsWith('is')){
+				value = player[key] ? 1 : 0
+			}
+			if (key.endsWith('id') || key.endsWith('number')){
+				value = parseInt(player[key])
+			}
+			formData.append(key, value)
+		});
+
+		StirlandsHelper.ajaxPost(method, formData);
+		this.reset();
 	}
 
 	async componentDidMount(){
-		let { locationData, teamData, playerData } = this.state;
+		let { locationData, teamData } = this.state;
 
-		if (this.state.selected[0] && !this.state.playerData) {
-			let formData = new FormData();
-			formData.append("playerid", this.state.selected[0])
-			await StirlandsHelper.ajaxPost("getPlayer", formData).then(resp => {
-				console.log(resp)
-			playerData = resp.result[0]});
-		}
 		if (!this.state.locationData || !this.state.teamData){
 
 			await StirlandsHelper.ajaxPost("locations", new FormData()).then(resp => locationData = resp.result);
@@ -163,7 +175,7 @@ class DataGrid extends Component {
 
 
 
-		this.setState({ locationData, teamData, playerData });
+		this.setState({ locationData, teamData });
 	}
 
     render() {
@@ -186,7 +198,6 @@ class DataGrid extends Component {
 				} catch {
 					Icon = Icons.Help
 				}
-				console.log(col.icon)
 				function iconRender(rowData, iconToRender){
 					return rowData[col.key] === 1 ? <Icon /> : null
 
@@ -207,21 +218,19 @@ class DataGrid extends Component {
 
 			// Only allow editing if user is an administrator
 			if (this.state.user?.rfuserrole === 'Administrator'){
-				console.log(this.state)
 				let diableDelete = this.state.selected.length < 1;
 				let diableEdit = this.state.selected.length !== 1;
 				let disableAdd = this.state.selected.length !== 0;
 				
 				const Form = () =>{
 					if (this.state.isOpenAdd) {
-						console.log('state in render');
-						console.log(this.state);
 					return (
 							<Modal open={this.state.isOpenAdd} onClose={(event) => this.handleEdit()}>
 								<Card className={classes.modalForm}>
 									<MuiPickersUtilsProvider utils={MomentUtils}>
 									<FormControl>
 										<TextField
+										required
 											label="First Name"
 											value={this.state?.firstname}
 											id="firstname" name="firstname" placeholder="Enter first name"
@@ -230,9 +239,28 @@ class DataGrid extends Component {
 									</FormControl>
 									<FormControl>
 										<TextField
+										required
 											label="Last Name"
 											defaultValue={this.state?.lastname}
 											id="lastname" name="lastname" placeholder="Enter last name"
+											onBlur={(event) =>  this.handleInputChange(event)}
+										/>
+									</FormControl>
+									<FormControl>
+										<TextField
+										required
+											label="Home Phone"
+											defaultValue={this.state?.homenumber}
+											id="homenumber" name="homenumber" type="tel" placeholder="Enter home phone number"
+											onBlur={(event) =>  this.handleInputChange(event)}
+										/>
+									</FormControl>
+									<FormControl>
+										<TextField
+										required
+											label="Mobile"
+											defaultValue={this.state?.phonenumber}
+											id="phonenumber" name="phonenumber" type="tel" placeholder="Enter mobile phone number"
 											onBlur={(event) =>  this.handleInputChange(event)}
 										/>
 									</FormControl>
@@ -254,53 +282,88 @@ class DataGrid extends Component {
 										getOptionLabel={(option) => option.locationname }
 										onChange={(event, data) => this.handleComboChange(event, data, 'locationid')}
 									/>
-										<DatePicker disableFuture format="DD-MM-YYYY" id="dateregistered" name="dateregistered" label="Date Registered" onChange={(moment) => this.handleDateChange("dateregistered", moment)} />
+										<DatePicker disableFuture format="DD-MM-YYYY" id="dateregistered" value={this.state.dateregisteredraw}name="dateregistered" label="Date Registered" onChange={(moment) => this.handleDateChange("dateregistered", moment)} />
 										<DatePicker disableFuture format="DD-MM-YYYY" id="dateofbirth" value={this.state.dateofbirthraw} name="dateofbirth" label="D.O.B" onChange={(moment) => this.handleDateChange("dateofbirth", moment)} />
+										<FormControlLabel label="Current Team" control={ <Switch color="secondary" checked={this.state.iscurrent} name="iscurrent" onChange={(event) => this.handleInputChange(event)} />}  />
+										<FormControlLabel label="Active player" control={ <Switch color="secondary" checked={this.state.isactive} name="isactive" onChange={(event) => this.handleInputChange(event)} />}  />
+										<FormControlLabel label="Team Captain" control={ <Switch color="primary" checked={this.state.iscaptain} name="iscaptain" onChange={(event) => this.handleInputChange(event)} />}  />
 									<CardActions>
-										<Button className={classes.submit} onClick={(event) => this.getFormDetails(event)}>Add</Button>
+										<Button className={classes.submit} onClick={(event) => this.getFormDetails('addPlayer')}>Add</Button>
+										<Button onClick={(event) => this.handleAdd()}>Close</Button>
 									</CardActions>		
 									</MuiPickersUtilsProvider>
 								</Card>
 							</Modal>
 						);
 					} else if (this.state.isOpenEdit){
-							return (
+					return (
 							<Modal open={this.state.isOpenAdd} onClose={(event) => this.handleEdit()}>
 								<Card className={classes.modalForm}>
+									<MuiPickersUtilsProvider utils={MomentUtils}>
 									<FormControl>
 										<TextField
+										required
 											label="First Name"
-											value={this.state.player['firstname'] ? this.state.addPlayer["firstname"] : '' }
+											value={this.state?.playerData?.firstname}
 											id="firstname" name="firstname" placeholder="Enter first name"
-											onChange={(event) =>  this.handleInputChange(event)}
+											onBlur={(event) =>  this.handleInputChange(event)}
 										/>
 									</FormControl>
 									<FormControl>
 										<TextField
+										required
 											label="Last Name"
-											value={this.state.addPlayer["lastname"] ? this.state.addPlayer["lastname"] : '' }
+											defaultValue={this.state?.lastname}
 											id="lastname" name="lastname" placeholder="Enter last name"
-											onChange={(event) =>  this.handleInputChange(event)}
+											onBlur={(event) =>  this.handleInputChange(event)}
+										/>
+									</FormControl>
+									<FormControl>
+										<TextField
+										required
+											label="Home Phone"
+											defaultValue={this.state?.playerData?.homenumber}
+											id="homenumber" name="homenumber" type="tel" placeholder="Enter home phone number"
+											onBlur={(event) =>  this.handleInputChange(event)}
+										/>
+									</FormControl>
+									<FormControl>
+										<TextField
+										required
+											label="Mobile"
+											defaultValue={this.state?.phonenumber}
+											id="phonenumber" name="phonenumber" type="tel" placeholder="Enter mobile phone number"
+											onBlur={(event) =>  this.handleInputChange(event)}
 										/>
 									</FormControl>
 									<Autocomplete 
 										options={this.state.teamData}
-										id="locationid"
-										name="locationid"
-										
+										id="teamid"
+										name="teamid"
+										value={this.state?.playerData?.team}
 										renderInput={(params) => <TextField {...params} label="Team" variant="outlined"/>}
 										getOptionLabel={(option) => option.teamname }
+										onChange={(event, data) => this.handleComboChange(event, data, 'teamid')}
 									/>
 									<Autocomplete 
 										options={this.state.locationData}
 										id="locationid"
 										name="locationid"
+										value={this.state?.playerData?.location}
 										renderInput={(params) => <TextField {...params} label="Location" variant="outlined"/>}
 										getOptionLabel={(option) => option.locationname }
+										onChange={(event, data) => this.handleComboChange(event, data, 'locationid')}
 									/>
+										<DatePicker disableFuture format="DD-MM-YYYY" id="dateregistered" value={this.state.dateregisteredraw}name="dateregistered" label="Date Registered" onChange={(moment) => this.handleDateChange("dateregistered", moment)} />
+										<DatePicker disableFuture format="DD-MM-YYYY" id="dateofbirth" value={this.state.dateofbirthraw} name="dateofbirth" label="D.O.B" onChange={(moment) => this.handleDateChange("dateofbirth", moment)} />
+										<FormControlLabel label="Current Team" control={ <Switch color="secondary" checked={this.state.iscurrent} name="iscurrent" onChange={(event) => this.handleInputChange(event)} />}  />
+										<FormControlLabel label="Active player" control={ <Switch color="secondary" checked={this.state.isactive} name="isactive" onChange={(event) => this.handleInputChange(event)} />}  />
+										<FormControlLabel label="Team Captain" control={ <Switch color="primary" checked={this.state.iscaptain} name="iscaptain" onChange={(event) => this.handleInputChange(event)} />}  />
 									<CardActions>
-										<Button onClick={(event) => this.handleLoginClick(event)}>Login</Button>
+										<Button className={classes.submit} onClick={(event) => this.getFormDetails('addPlayer')}>Add</Button>
+										<Button onClick={(event) => this.handleAdd()}>Close</Button>
 									</CardActions>		
+									</MuiPickersUtilsProvider>
 								</Card>
 							</Modal>
 						);

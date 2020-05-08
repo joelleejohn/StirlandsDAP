@@ -41,13 +41,8 @@ class Home extends Component {
     }
 
     refreshData(){
-        let response;
-
-        StirlandsHelper.ajaxPost(this.props.query, new FormData()).then( resp => {
-            response = resp; 
-        });
-
-        this.setState({ data: response.data.result, columns: response.columns, loadGrid: response?.data?.result?.length > 1 });
+        this.setState({ loadGrid: true});
+        window.location.reload();
     }
 
     render() {
