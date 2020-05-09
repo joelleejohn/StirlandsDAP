@@ -5,7 +5,6 @@ import * as Icons from '@material-ui/icons';
 import { MenuBook, Menu as MenuIcon } from '@material-ui/icons';
 import { Button, Paper, List, ListItem, ListItemText, ListItemIcon, withTheme, withStyles } from '@material-ui/core';
 import Drawer from '@material-ui/core/Drawer';
-import Authenticate from "./Authenticate";
 import Login from "../pages/Login";
 import Error404 from "../pages/Error404";
 
