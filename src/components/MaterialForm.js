@@ -129,7 +129,7 @@ class MaterialForm extends Component {
 		});
 
 		StirlandsHelper.ajaxPost(method, formData);
-		this.handClose();
+		this.props.handleClose();
 	}
 
 	render() {

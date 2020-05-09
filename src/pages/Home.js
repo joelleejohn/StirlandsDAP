@@ -40,9 +40,16 @@ class Home extends Component {
         this.setState({ data: response.data.result, columns: response.columns, loadGrid: response?.data?.result?.length > 1 });
     }
 
-    refreshData(){
-        this.setState({ loadGrid: true});
-        window.location.reload();
+    async refreshData(){
+        await StirlandsHelper.ajaxPost(this.props.query, new FormData()).then( resp => {
+            this.setState({ data: null });
+            this.setState({ data: resp.data.result, loadGrid: resp?.data?.result?.length > 1 });
+            this.props.history.push("/");
+        });
+    }
+
+    componentDidUpdate(){
+        console.log('updated');
     }
 
     render() {

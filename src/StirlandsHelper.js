@@ -8,8 +8,6 @@ export default class StirlandsHelper {
 			body: formData,
 			credentials: "same-origin"})
 					  .then(async response => { returnData = await response.json()});
-		console.log(method + ' returned');
-		console.log(returnData);
 		return returnData;
 	}
 

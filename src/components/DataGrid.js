@@ -70,11 +70,15 @@ class DataGrid extends Component {
 
 	handleEdit(){
 		const newState = !this.state.isOpenEdit;
+		if (!newState)
+			this.props.refreshData()
 		this.setState({ isOpenEdit: newState, playerData: newState ? this.state.selected[0]: null});
 	}
 
 	handleAdd(){
 		const newState = !this.state.isOpenAdd;
+		if (!newState)
+			this.props.refreshData()
 		this.setState({ isOpenAdd: newState });
 	}
 
@@ -181,6 +185,12 @@ class DataGrid extends Component {
 									disabled: diableDelete,
 									onClick: (event, rows) => this.handleDelete(rows)
 								},
+								{
+									tooltip: 'Refresh data',
+									icon: 'refresh',
+									isFreeAction: true,
+									onClick: (event) => this.reset()
+								}
 							]}
 						/>
 						<Form />

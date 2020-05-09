@@ -188,8 +188,8 @@ function editPlayer(DbConnect $db)
 	];
 
 	return $db->queryRecords(
-		"CALL `playeradd`(
-			 :playerid
+		"CALL `playeredit`(
+			 :playerid,
 			 :locationid,
 			 :firstname,
 			 :lastname,

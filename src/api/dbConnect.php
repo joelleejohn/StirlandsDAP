@@ -56,7 +56,7 @@ class DbConnect
 
 	public function queryRecords(string $query, array $contexts = null)
 	{
-		$retVal = ["error" => null, "result" => null];
+		$retVal = ["error" => null, "result" => null, "contexts" => [ "raw" => $contexts ] ];
 
 		try {
 			$db = $this->getDatabase();
@@ -67,6 +67,7 @@ class DbConnect
 				// Whatever contexts we have, convert that to a parameter.
 				// This avoids writing a procedure for each query that uses parameters. 
 				foreach ($contexts as $key => $val) {
+					array_push($retVal["contexts"], [":". $key], $val["value"]);
 
 					$dbQuery->bindValue(':' . $key, $val["value"], $val["dt"]);
 				}
@@ -79,6 +80,9 @@ class DbConnect
 				$retVal["error"] = !$returned ? $returned : false;
 			}
 		} catch (Throwable $ex) {
+			foreach ($contexts as $key => $val) {
+				array_push($retVal["contexts"], [":". $key], $val["value"]);
+			}
 			$retVal["error"] = '--Failed to run query. Error: ' . $ex->getMessage();
 		} finally {
 			return $retVal;

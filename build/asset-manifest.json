@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/DAP522/build/static/css/main.a4b46ed0.chunk.css",
-    "main.js": "/DAP522/build/static/js/main.0ba0acbc.chunk.js",
-    "main.js.map": "/DAP522/build/static/js/main.0ba0acbc.chunk.js.map",
+    "main.js": "/DAP522/build/static/js/main.d7504396.chunk.js",
+    "main.js.map": "/DAP522/build/static/js/main.d7504396.chunk.js.map",
     "runtime-main.js": "/DAP522/build/static/js/runtime-main.e400a4bf.js",
     "runtime-main.js.map": "/DAP522/build/static/js/runtime-main.e400a4bf.js.map",
-    "static/js/2.6911dc59.chunk.js": "/DAP522/build/static/js/2.6911dc59.chunk.js",
-    "static/js/2.6911dc59.chunk.js.map": "/DAP522/build/static/js/2.6911dc59.chunk.js.map",
+    "static/js/2.9afc8bbd.chunk.js": "/DAP522/build/static/js/2.9afc8bbd.chunk.js",
+    "static/js/2.9afc8bbd.chunk.js.map": "/DAP522/build/static/js/2.9afc8bbd.chunk.js.map",
     "index.html": "/DAP522/build/index.html",
-    "precache-manifest.a597717f6c2aa84f3db12414bf834790.js": "/DAP522/build/precache-manifest.a597717f6c2aa84f3db12414bf834790.js",
+    "precache-manifest.da96b6ed5c88dff90488ce3b8de5c92b.js": "/DAP522/build/precache-manifest.da96b6ed5c88dff90488ce3b8de5c92b.js",
     "service-worker.js": "/DAP522/build/service-worker.js",
     "static/css/main.a4b46ed0.chunk.css.map": "/DAP522/build/static/css/main.a4b46ed0.chunk.css.map",
-    "static/js/2.6911dc59.chunk.js.LICENSE.txt": "/DAP522/build/static/js/2.6911dc59.chunk.js.LICENSE.txt"
+    "static/js/2.9afc8bbd.chunk.js.LICENSE.txt": "/DAP522/build/static/js/2.9afc8bbd.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.e400a4bf.js",
-    "static/js/2.6911dc59.chunk.js",
+    "static/js/2.9afc8bbd.chunk.js",
     "static/css/main.a4b46ed0.chunk.css",
-    "static/js/main.0ba0acbc.chunk.js"
+    "static/js/main.d7504396.chunk.js"
   ]
 }
