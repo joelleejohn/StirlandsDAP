@@ -75,7 +75,7 @@ class Login extends Component {
 		const { history, classes } = this.props;
 
 		if (this.state.isLoggedIn)
-			history.replace("/players");
+			history.push("/");
 
 		const inputProps = {
 			step: 300,

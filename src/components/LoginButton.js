@@ -60,7 +60,7 @@ class LoginButton extends Component {
 				<div>
 					<Link component={RouterLink} to="/login" className={ classes.lb }>
 						<Button className={ classes.loginButton }>
-							login
+							Login
 						</Button>
 					</Link>
 				</div>
